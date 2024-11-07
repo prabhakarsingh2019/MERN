@@ -1,6 +1,16 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import nodemailer from "nodemailer";
+import { resetTemplate } from "../mails/template.js";
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.USER_EMAIL,
+    pass: process.env.USER_PASS,
+  },
+});
 
 export const signup = async (req, res) => {
   const { firstName, lastName, username, email, password } = req.body;
@@ -50,6 +60,32 @@ export const login = async (req, res) => {
       jwttoken,
       email,
       name: user.name,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", success: false });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  const errMsg = "Enter valid email";
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: errMsg, success: false });
+    }
+
+    const mailOptions = {
+      from: process.env.USER_EMAIL,
+      to: user.email,
+      subject: "Password reset email",
+      text: "Link will be expire within 1h",
+      html: resetTemplate.replace("[User's Name]", user.firstName),
+    };
+
+    res.status(200).json({
+      message: "Password reset link sent to your email",
+      success: true,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", success: false });
