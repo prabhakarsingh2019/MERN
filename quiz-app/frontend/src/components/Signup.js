@@ -26,15 +26,19 @@ const Signup = () => {
   };
 
   return (
-    <div>
-      <h2>Signup</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h2 className="text-2xl font-semibold mb-6">Signup</h2>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-1/2"
+      >
         <input
           type="text"
           name="firstName"
           placeholder="First Name"
           onChange={handleChange}
           required
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
         <input
           type="text"
@@ -42,6 +46,7 @@ const Signup = () => {
           placeholder="First Name"
           onChange={handleChange}
           required
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
         <input
           type="text"
@@ -49,6 +54,7 @@ const Signup = () => {
           placeholder="Username"
           onChange={handleChange}
           required
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
         <input
           type="email"
@@ -56,6 +62,7 @@ const Signup = () => {
           placeholder="Email"
           onChange={handleChange}
           required
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
         <input
           type="password"
@@ -63,10 +70,16 @@ const Signup = () => {
           placeholder="Password"
           onChange={handleChange}
           required
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
-        <button type="submit">Signup</button>
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Signup
+        </button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className="text-red-500 mt-4">{message}</p>}
     </div>
   );
 };
