@@ -1,10 +1,6 @@
 import express from "express";
 
-import {
-  forgotPassword,
-  login,
-  signup,
-} from "../controllers/userController.js";
+import { login, signup } from "../controllers/userController.js";
 import {
   loginValidation,
   signupValidation,
@@ -18,5 +14,4 @@ router.post("/sign-up", signupValidation, signup);
 //Login
 router.post("/login", loginValidation, login);
 
-router.post("/forgot-password", forgotPassword);
 export default router;

@@ -18,7 +18,10 @@ export const signup = async (req, res) => {
     const userEmail = await User.findOne({ email });
     const usernameExist = await User.findOne({ username });
     if (userEmail || usernameExist) {
-      return res.status(400).send("User already exists");
+      return res.status(400).json({
+        message: "User already exists",
+        success: false,
+      });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
@@ -29,7 +32,10 @@ export const signup = async (req, res) => {
       password: hashedPassword,
     });
     await user.save();
-    res.send("User registered successfully");
+    res.status(200).json({
+      message: "Sign in successfully",
+      success: true,
+    });
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -66,7 +72,7 @@ export const login = async (req, res) => {
   }
 };
 
-export const forgotPassword = async (req, res) => {
+/*export const forgotPassword = async (req, res) => {
   const { email } = req.body;
   const errMsg = "Enter valid email";
   try {
@@ -82,7 +88,7 @@ export const forgotPassword = async (req, res) => {
       text: "Link will be expire within 1h",
       html: resetTemplate.replace("[User's Name]", user.firstName),
     };
-
+    await transporter.sendMail(mailOptions);
     res.status(200).json({
       message: "Password reset link sent to your email",
       success: true,
@@ -90,4 +96,4 @@ export const forgotPassword = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error", success: false });
   }
-};
+};*/
