@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { signup } from "../services/authServices";
-
+import { Link } from "react-router-dom";
 const Signup = () => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -79,6 +79,12 @@ const Signup = () => {
           Signup
         </button>
       </form>
+      <p className="mt-4 text-center text-sm text-gray-600">
+        Alredy have an account{" "}
+        <Link to="login" className="text-blue-600 hover:text-blue-800">
+          Log in
+        </Link>
+      </p>
       {message && <p className="text-red-500 mt-4">{message}</p>}
     </div>
   );

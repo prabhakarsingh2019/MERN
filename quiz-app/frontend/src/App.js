@@ -2,18 +2,19 @@ import React from "react";
 import { Link, BrowserRouter, Route, Routes } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+import Navbar from "./components/Navbar";
 
 const Home = () => (
-  <div>
-    <h1>Welcome to the Quiz App</h1>
-    <Link to="/sign-up">Go to Signup</Link>
-    <Link to="/login">Login</Link>
+  <div className="p-6">
+    <h1 className="text-3xl font-bold mb-4">Welcome to the Quiz App</h1>
   </div>
 );
 
 const App = () => {
   return (
     <BrowserRouter>
+      <Navbar />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign-up" element={<Signup />} />
@@ -22,4 +23,5 @@ const App = () => {
     </BrowserRouter>
   );
 };
+
 export default App;
