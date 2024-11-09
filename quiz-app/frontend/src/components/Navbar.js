@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Logout from "./Logout";
+import { logout } from "../utils/logout";
 
 const Navbar = () => {
   const token = localStorage.getItem("authToken");
@@ -28,7 +30,7 @@ const Navbar = () => {
               to="/quiz"
               className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
             >
-              Quizzes
+              Create Quiz
             </Link>
             <Link
               to="/profile"
@@ -50,6 +52,17 @@ const Navbar = () => {
                 >
                   Sign up
                 </Link>
+              </>
+            )}
+
+            {token && (
+              <>
+                <button
+                  onClick={logout}
+                  className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Log out
+                </button>
               </>
             )}
           </div>
