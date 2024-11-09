@@ -4,7 +4,7 @@ import { createQuiz } from "../services/quizService";
 const QuizForm = () => {
   const [quiz, setQuiz] = useState({
     title: "",
-    discription: "",
+    description: "",
     questions: [
       {
         questionText: "",
@@ -15,8 +15,8 @@ const QuizForm = () => {
   });
 
   const [message, setMessage] = useState("");
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
     e.preventDefault();
     try {
       const response = await createQuiz(quiz);
@@ -25,30 +25,36 @@ const QuizForm = () => {
       setMessage(error.message);
     }
   };
+
   const handleQuestionChange = (index, field, value) => {
     const updatedQuestions = [...quiz.questions];
     updatedQuestions[index][field] = value;
     setQuiz({ ...quiz, questions: updatedQuestions });
   };
+
   const handleOptionChange = (qIndex, oIndex, value) => {
     const updatedQuestions = [...quiz.questions];
     updatedQuestions[qIndex].options[oIndex].text = value;
     setQuiz({ ...quiz, questions: updatedQuestions });
   };
+
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setQuiz((prevQuiz) => ({ ...prevQuiz, [name]: value }));
   };
+
   const addOption = (qIndex) => {
     const updatedQuestions = [...quiz.questions];
     updatedQuestions[qIndex].options.push({ text: "" });
     setQuiz({ ...quiz, questions: updatedQuestions });
   };
+
   const removeOption = (qIndex, oIndex) => {
     const updatedQuestions = [...quiz.questions];
     updatedQuestions[qIndex].options.splice(oIndex, 1);
     setQuiz({ ...quiz, questions: updatedQuestions });
   };
+
   const addQuestion = () => {
     setQuiz({
       ...quiz,
@@ -64,48 +70,61 @@ const QuizForm = () => {
   };
 
   return (
-    <div>
-      <h1>Quiz Form</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="max-w-3xl mx-auto p-4 bg-white shadow-md rounded-lg">
+      <h1 className="text-2xl font-bold text-center mb-4">Create a Quiz</h1>
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Quiz Title */}
         <div>
-          <label>Title</label>
+          <label className="block text-sm font-semibold text-gray-700">
+            Title
+          </label>
           <input
             type="text"
-            placeholder="Enter title"
+            placeholder="Enter quiz title"
             name="title"
             value={quiz.title}
-            required
             onChange={handleFormChange}
+            required
+            className="w-full mt-2 p-2 border border-gray-300 rounded-md"
           />
         </div>
+
         {/* Quiz Description */}
         <div>
-          <label>Description</label>
+          <label className="block text-sm font-semibold text-gray-700">
+            Description
+          </label>
           <textarea
-            placeholder="Enter description"
-            name="discription"
-            value={quiz.discription}
-            required
+            placeholder="Enter quiz description"
+            name="description"
+            value={quiz.description}
             onChange={handleFormChange}
+            required
+            className="w-full mt-2 p-2 border border-gray-300 rounded-md"
           />
         </div>
-        {/* Quiz questions */}
+
+        {/* Quiz Questions */}
         {quiz.questions.map((question, qIndex) => (
-          <div>
-            <label>Question {qIndex + 1}</label>
+          <div key={qIndex} className="space-y-4">
+            <label className="block text-sm font-semibold text-gray-700">
+              Question {qIndex + 1}
+            </label>
             <input
               type="text"
               placeholder="Enter question"
               name="questionText"
-              required
               value={question.questionText}
               onChange={(e) =>
                 handleQuestionChange(qIndex, "questionText", e.target.value)
               }
+              required
+              className="w-full mt-2 p-2 border border-gray-300 rounded-md"
             />
+
+            {/* Question Options */}
             {question.options.map((option, oIndex) => (
-              <div>
+              <div key={oIndex} className="flex items-center space-x-2">
                 <input
                   type="text"
                   placeholder="Enter option"
@@ -115,6 +134,7 @@ const QuizForm = () => {
                     handleOptionChange(qIndex, oIndex, e.target.value)
                   }
                   required
+                  className="w-full mt-2 p-2 border border-gray-300 rounded-md"
                 />
                 <input
                   type="radio"
@@ -123,29 +143,51 @@ const QuizForm = () => {
                   onChange={() =>
                     handleQuestionChange(qIndex, "correctAnswer", oIndex)
                   }
+                  className="mt-2"
                 />
                 <button
                   type="button"
                   onClick={() => removeOption(qIndex, oIndex)}
+                  className="text-red-600 mt-2"
                 >
-                  remove
+                  Remove
                 </button>
               </div>
             ))}
-            <button type="button" onClick={() => addOption(qIndex)}>
+            <button
+              type="button"
+              onClick={() => addOption(qIndex)}
+              className="py-1 px-3 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 mt-2"
+            >
               Add Option
             </button>
           </div>
         ))}
-        <button type="button" onClick={addQuestion}>
+
+        {/* Add Another Question */}
+        <button
+          type="button"
+          onClick={addQuestion}
+          className="py-1 px-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 mt-2"
+        >
           Add Another Question
         </button>
 
         {/* Submit Button */}
-        <button type="submit">Create Quiz</button>
+        <div>
+          <button
+            type="submit"
+            className="w-full mt-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
+          >
+            Create Quiz
+          </button>
+        </div>
       </form>
-      {message && <p>{message}</p>}
+
+      {/* Success/Failure Message */}
+      {message && <p className="text-center text-red-500 mt-4">{message}</p>}
     </div>
   );
 };
+
 export default QuizForm;

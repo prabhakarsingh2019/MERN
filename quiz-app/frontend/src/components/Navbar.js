@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const token = localStorage.getItem("authToken");
+  console.log(token);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
@@ -34,18 +36,22 @@ const Navbar = () => {
             >
               Profile
             </Link>
-            <Link
-              to="/login"
-              className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Login
-            </Link>
-            <Link
-              to="/sign-up"
-              className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Sign up
-            </Link>
+            {!token && (
+              <>
+                <Link
+                  to="/login"
+                  className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/sign-up"
+                  className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Hamburger Icon for smaller screens */}
