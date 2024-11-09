@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <nav className="bg-blue-600 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -12,6 +14,7 @@ const Navbar = () => {
             </Link>
           </div>
 
+          {/* Links for larger screens */}
           <div className="hidden md:flex space-x-4">
             <Link
               to="/"
@@ -45,8 +48,12 @@ const Navbar = () => {
             </Link>
           </div>
 
+          {/* Hamburger Icon for smaller screens */}
           <div className="md:hidden">
-            <button className="text-white focus:outline-none focus:ring-2 focus:ring-white">
+            <button
+              onClick={toggleMenu}
+              className="text-white focus:outline-none focus:ring-2 focus:ring-white"
+            >
               <svg
                 className="h-6 w-6"
                 xmlns="http://www.w3.org/2000/svg"
@@ -65,6 +72,42 @@ const Navbar = () => {
             </button>
           </div>
         </div>
+
+        {/* Dropdown Menu for smaller screens */}
+        {isMenuOpen && (
+          <div className="md:hidden space-y-1 mt-2">
+            <Link
+              to="/"
+              className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Home
+            </Link>
+            <Link
+              to="/quiz"
+              className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Quizzes
+            </Link>
+            <Link
+              to="/profile"
+              className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Profile
+            </Link>
+            <Link
+              to="/login"
+              className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Login
+            </Link>
+            <Link
+              to="/sign-up"
+              className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Sign up
+            </Link>
+          </div>
+        )}
       </div>
     </nav>
   );
