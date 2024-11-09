@@ -3,6 +3,7 @@ import { Link, BrowserRouter, Route, Routes } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
+import QuizForm from "./components/QuizForm";
 
 const Home = () => (
   <div className="p-6">
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/sign-up" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/quiz" element={<QuizForm />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { User } from "./user.model";
+import User from "./User.js";
 
 const optionSchema = new mongoose.Schema({
   option: { type: String, required: true },
@@ -15,11 +15,11 @@ const questionSchema = new mongoose.Schema({
 const quizzSchema = new mongoose.Schema(
   {
     title: {
-      type: string,
+      type: String,
       required: true,
     },
     discription: {
-      type: string,
+      type: String,
       required: true,
     },
     quetions: {

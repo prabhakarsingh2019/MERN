@@ -15,6 +15,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await login(formData);
+      console.log(response);
       setMessage(response.message);
     } catch (error) {
       setMessage(error.message);
@@ -33,6 +34,7 @@ const Login = () => {
           placeholder="Email"
           onChange={handleChange}
           required
+          value={formData.email}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
         <input
@@ -41,6 +43,7 @@ const Login = () => {
           placeholder="Password"
           onChange={handleChange}
           required
+          value={formData.password}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
         <button

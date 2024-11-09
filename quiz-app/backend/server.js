@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRoutes from "./routes/userRoutes.js";
-
+import quizzRoutes from "./routes/quizRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -23,6 +23,7 @@ mongoose
 
 //Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/quiz", quizzRoutes);
 app.listen(process.env.PORT, () => {
   console.log("Server is running on port " + process.env.PORT);
 });

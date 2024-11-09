@@ -38,6 +38,7 @@ const Signup = () => {
           placeholder="First Name"
           onChange={handleChange}
           required
+          value={formData.firstName}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
         <input
@@ -46,6 +47,7 @@ const Signup = () => {
           placeholder="First Name"
           onChange={handleChange}
           required
+          value={formData.lastName}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
         <input
@@ -54,6 +56,7 @@ const Signup = () => {
           placeholder="Username"
           onChange={handleChange}
           required
+          value={formData.username}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
         <input
@@ -62,6 +65,7 @@ const Signup = () => {
           placeholder="Email"
           onChange={handleChange}
           required
+          value={formData.email}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
         <input
@@ -70,6 +74,7 @@ const Signup = () => {
           placeholder="Password"
           onChange={handleChange}
           required
+          value={formData.password}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
         />
         <button
