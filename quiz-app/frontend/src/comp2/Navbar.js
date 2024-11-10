@@ -1,13 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Logout from "./Logout";
+import Logout from "../components/Logout";
+import { logout } from "../utils/logout";
 
-import { AuthContext } from "../context/AuthContext";
-
-const Navbar = () => {
+const Navbar = ({}) => {
   const token = localStorage.getItem("authToken");
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
-
   console.log(token);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -55,12 +52,6 @@ const Navbar = () => {
                 >
                   Sign up
                 </Link>
-              </>
-            )}
-
-            {token && (
-              <>
-                <Logout className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium" />
               </>
             )}
           </div>

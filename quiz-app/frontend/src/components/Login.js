@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { login } from "../services/authServices";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+
 const Login = () => {
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -16,10 +19,9 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await login(formData);
-
       setMessage(response.message);
+      setIsLoggedIn(true);
       navigate("/");
-      window.location.reload();
     } catch (error) {
       setMessage(error.message);
     }

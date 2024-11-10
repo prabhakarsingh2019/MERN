@@ -1,11 +1,21 @@
-import { logout } from "../utils/logout";
+import { useContext } from "react";
+
+import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
+  const { setIsLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.removeItem("authToken");
+    setIsLoggedIn(false);
+    navigate("/");
+  };
   return (
     <div>
       <button
         onClick={logout}
-        className="py-1 px-3 bg-red-600 text-white font-semibold rounded-md hover:bg-red-700 mt-2"
+        className="  text-red-600 font-semibold rounded-md hover:text-red-700 mt-1"
       >
         Logout
       </button>
