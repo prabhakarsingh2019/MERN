@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 import User from "./User.js";
 
 const optionSchema = new mongoose.Schema({
-  option: { type: String, required: true },
-  isCorrect: { type: Boolean, required: true },
+  option: { type: String },
+  isCorrect: { type: Boolean },
 });
 
 const questionSchema = new mongoose.Schema({
-  question: { type: String, required: true },
+  question: { type: String },
   options: [optionSchema],
 });
 
@@ -22,7 +22,7 @@ const quizzSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    quetions: {
+    questions: {
       type: [questionSchema],
     },
     creator: {
@@ -30,6 +30,8 @@ const quizzSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    creatorName: { type: String, required: true },
+    creatorUsername: { type: String, required: true },
   },
   { timestamps: true }
 );

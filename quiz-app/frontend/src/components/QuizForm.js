@@ -8,8 +8,7 @@ const QuizForm = () => {
     questions: [
       {
         questionText: "",
-        options: [{ text: "" }],
-        correctAnswer: null,
+        options: [{ text: "", isCorrect: false }],
       },
     ],
   });
@@ -45,7 +44,7 @@ const QuizForm = () => {
 
   const addOption = (qIndex) => {
     const updatedQuestions = [...quiz.questions];
-    updatedQuestions[qIndex].options.push({ text: "" });
+    updatedQuestions[qIndex].options.push({ text: "", isCorrect: false });
     setQuiz({ ...quiz, questions: updatedQuestions });
   };
 
@@ -62,11 +61,23 @@ const QuizForm = () => {
         ...quiz.questions,
         {
           questionText: "",
-          options: [{ text: "" }],
-          correctAnswer: null,
+          options: [{ text: "", isCorrect: false }],
         },
       ],
     });
+  };
+
+  const handleCorrectAnswerChange = (qIndex, oIndex) => {
+    const updatedQuestions = [...quiz.questions];
+    updatedQuestions[qIndex].options = updatedQuestions[qIndex].options.map(
+      (option, index) => {
+        return {
+          ...option,
+          isCorrect: index === oIndex,
+        };
+      }
+    );
+    setQuiz({ ...quiz, questions: updatedQuestions });
   };
 
   return (
@@ -139,10 +150,8 @@ const QuizForm = () => {
                 <input
                   type="radio"
                   name={`correctAnswer-${qIndex}`}
-                  checked={question.correctAnswer === oIndex}
-                  onChange={() =>
-                    handleQuestionChange(qIndex, "correctAnswer", oIndex)
-                  }
+                  checked={option.isCorrect}
+                  onChange={() => handleCorrectAnswerChange(qIndex, oIndex)}
                   className="mt-2"
                 />
                 <button

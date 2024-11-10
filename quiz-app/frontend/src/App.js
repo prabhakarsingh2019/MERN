@@ -4,14 +4,9 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
 import QuizForm from "./components/QuizForm";
-import Profile from "./comp2/Profile";
 import { AuthContextProvider } from "./context/AuthContext";
-
-const Home = () => (
-  <div className="p-6">
-    <h1 className="text-3xl font-bold mb-4">Welcome to the Quiz App</h1>
-  </div>
-);
+import Home from "./components/Home";
+import Profile from "./components/Profile";
 
 const App = () => {
   return (
