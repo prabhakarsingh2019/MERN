@@ -8,7 +8,6 @@ const Navbar = () => {
   const token = localStorage.getItem("authToken");
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
-  console.log(token);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
@@ -30,13 +29,13 @@ const Navbar = () => {
               Home
             </Link>
             <Link
-              to="/quiz"
+              to={isLoggedIn ? "/create-quiz" : "/login"}
               className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
             >
               Create Quiz
             </Link>
             <Link
-              to="/profile"
+              to={isLoggedIn ? "/profile" : "/login"}
               className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
             >
               Profile

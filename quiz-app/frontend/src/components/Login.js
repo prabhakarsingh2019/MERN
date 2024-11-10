@@ -11,6 +11,9 @@ const Login = () => {
     password: "",
   });
   const [message, setMessage] = useState("");
+  const navigateHandler = () => {
+    navigate("/sign-up");
+  };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -60,9 +63,12 @@ const Login = () => {
       </form>
       <p className="mt-4 text-center text-sm text-gray-600">
         Don't have account{" "}
-        <Link to="sign-up" className="text-blue-600 hover:text-blue-800">
+        <button
+          onClick={navigateHandler}
+          className="text-blue-600 hover:text-blue-800"
+        >
           Sign up
-        </Link>
+        </button>
       </p>
       {message && <p className="text-red-500 mt-4">{message}</p>}
     </div>

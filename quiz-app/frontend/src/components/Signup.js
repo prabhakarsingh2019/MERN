@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { signup } from "../services/authServices";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Signup = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -11,6 +12,9 @@ const Signup = () => {
   });
   const [message, setMessage] = useState("");
 
+  const navigateHandler = () => {
+    navigate("/login");
+  };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -86,9 +90,12 @@ const Signup = () => {
       </form>
       <p className="mt-4 text-center text-sm text-gray-600">
         Alredy have an account{" "}
-        <Link to="login" className="text-blue-600 hover:text-blue-800">
+        <button
+          onClick={navigateHandler}
+          className="text-blue-600 hover:text-blue-800"
+        >
           Log in
-        </Link>
+        </button>
       </p>
       {message && <p className="text-red-500 mt-4">{message}</p>}
     </div>

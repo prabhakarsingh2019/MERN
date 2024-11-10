@@ -1,7 +1,7 @@
 export const createQuiz = async (quizData) => {
   const token = localStorage.getItem("authToken");
   try {
-    const response = await fetch("/api/quiz", {
+    const response = await fetch("/api/quiz/create-quiz", {
       method: "POST",
       body: JSON.stringify(quizData),
       headers: {
