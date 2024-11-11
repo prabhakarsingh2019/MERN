@@ -27,11 +27,7 @@ export const createQuiz = async (req, res) => {
 export const getAllQuiz = async (req, res) => {
   try {
     const quizes = await Quiz.find({}).sort({ createdAt: -1 });
-
-    res.status(200).json({
-      quiz: quizes,
-      success: true,
-    });
+    res.status(200).json(quizes);
   } catch (error) {
     res.status(400).json({ message: error, success: false });
   }
