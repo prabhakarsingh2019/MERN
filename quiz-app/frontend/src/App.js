@@ -14,6 +14,11 @@ const App = () => {
     <AuthContextProvider>
       <BrowserRouter>
         <Navbar />
+        <div className="p-6  text-white">
+          <h1 className="text-black text-4xl font-bold">
+            Welcome to the Quiz App
+          </h1>
+        </div>
 
         <div className="min-h-screen bg-gray-100 p-4">
           <Routes>

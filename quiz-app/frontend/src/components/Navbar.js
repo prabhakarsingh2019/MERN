@@ -5,7 +5,6 @@ import Logout from "./Logout";
 import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
-  const token = localStorage.getItem("authToken");
   const { isLoggedIn } = useContext(AuthContext);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,7 +39,7 @@ const Navbar = () => {
             >
               Profile
             </Link>
-            {!token && (
+            {!isLoggedIn && (
               <>
                 <Link
                   to="/login"
@@ -57,7 +56,7 @@ const Navbar = () => {
               </>
             )}
 
-            {token && (
+            {isLoggedIn && (
               <>
                 <Logout className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium" />
               </>
@@ -110,20 +109,24 @@ const Navbar = () => {
             >
               Profile
             </Link>
-            <Link
-              to="/login"
-              className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Login
-            </Link>
-            <Link
-              to="/sign-up"
-              className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Sign up
-            </Link>
+            {!isLoggedIn && (
+              <div>
+                <Link
+                  to="/login"
+                  className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/sign-up"
+                  className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Sign up
+                </Link>
+              </div>
+            )}
 
-            {token && (
+            {isLoggedIn && (
               <>
                 <Logout className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium" />
               </>
