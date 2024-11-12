@@ -11,6 +11,7 @@ const QuizForm = () => {
         options: [{ text: "", isCorrect: false }],
       },
     ],
+    points: 0,
   });
 
   const [message, setMessage] = useState("");
@@ -113,6 +114,26 @@ const QuizForm = () => {
             required
             className="w-full mt-2 p-2 border border-gray-300 rounded-md"
           />
+        </div>
+
+        {/* Points for each queston */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700">
+            Set Score for each question
+          </label>
+          <input
+            type="text"
+            placeholder="Default value will be set to 0"
+            name="points"
+            value={quiz.points}
+            onChange={handleFormChange}
+            required
+            className="w-full mt-2 p-2 border border-gray-300 rounded-md"
+          />
+          <p className="mt-1 text-xs text-gray-500">
+            Setting the score to 0 means there will be no scoring system applied
+            to this quiz.
+          </p>
         </div>
 
         {/* Quiz Questions */}

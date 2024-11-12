@@ -30,6 +30,11 @@ const quizzSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+
+    points: {
+      type: Number,
+      default: 0,
+    },
     creatorName: { type: String, required: true },
     creatorUsername: { type: String, required: true },
   },

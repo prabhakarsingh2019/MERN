@@ -17,6 +17,8 @@ const ParticipatePage = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [message, setMessage] = useState("");
+  let score = 0;
+
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
@@ -66,17 +68,36 @@ const ParticipatePage = () => {
       setMessage("Answer all the questions before submitting the quiz");
       return;
     }
-
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setIsSubmitted(true);
   };
   if (!quiz) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex flex-col items-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-xl text-gray-700">Loading...</p>
+        </div>
+      </div>
+    );
   }
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       {isSubmitted && (
         <div>
-          <h1 className="text-5xl font-bold mb-4 text-blue-500">Quiz Result</h1>
+          <div>
+            <h1 className="text-5xl font-bold mb-4 text-blue-500">
+              Quiz Result
+            </h1>
+          </div>
+          {quiz.points !== 0 ? (
+            <div>
+              <p className="text-2xl  mb-4 text-gray-700">Your Score:</p>
+              <p className="text-2xl font-bold mb-4 text-gray-700">{score}</p>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       )}
 
