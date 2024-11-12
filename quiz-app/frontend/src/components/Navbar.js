@@ -6,7 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
   const token = localStorage.getItem("authToken");
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -102,7 +102,7 @@ const Navbar = () => {
               to="/quiz"
               className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
             >
-              Quizzes
+              Create Quiz
             </Link>
             <Link
               to="/profile"
@@ -122,6 +122,12 @@ const Navbar = () => {
             >
               Sign up
             </Link>
+
+            {token && (
+              <>
+                <Logout className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium" />
+              </>
+            )}
           </div>
         )}
       </div>

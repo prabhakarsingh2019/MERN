@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Quiz from "./Quiz";
+
 const Home = () => {
-  const [quizes, setQuizes] = useState("");
+  const [quizes, setQuizes] = useState([]);
 
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        const response = await fetch("/api/quiz/get-quiz");
+        const response = await fetch("/api/quiz/quizes");
         const data = await response.json();
         if (!response.ok) {
           throw new Error(data.message || "Failed to get quiz");
@@ -16,6 +17,7 @@ const Home = () => {
         throw error;
       }
     };
+
     fetchQuiz();
   }, []);
   const func = () => {

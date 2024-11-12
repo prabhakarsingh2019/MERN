@@ -7,6 +7,7 @@ import QuizForm from "./components/QuizForm";
 import { AuthContextProvider } from "./context/AuthContext";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
+import ParticipatePage from "./components/ParticipatePage";
 
 const App = () => {
   return (
@@ -55,6 +56,11 @@ const App = () => {
                   <Profile />
                 </div>
               }
+            />
+            <Route
+              className="bg-white p-6 rounded-lg shadow-md"
+              path="/participate/:quizId"
+              element={<ParticipatePage />}
             />
           </Routes>
         </div>

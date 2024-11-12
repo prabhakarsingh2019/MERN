@@ -32,3 +32,17 @@ export const getAllQuiz = async (req, res) => {
     res.status(400).json({ message: error, success: false });
   }
 };
+
+export const getQuizById = async (req, res) => {
+  try {
+    const quizId = req.params.quizId;
+
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+    res.status(200).json(quiz);
+  } catch (error) {
+    res.status(500).json({ message: JSON.stringify(error) });
+  }
+};

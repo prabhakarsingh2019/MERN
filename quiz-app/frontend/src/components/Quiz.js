@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 const Quiz = ({ quiz }) => {
+  const navigate = useNavigate();
   return (
     <div className="relative mb-6 p-6 bg-white shadow-md rounded-lg hover:shadow-lg transition">
       <div className="mb-4">
@@ -12,7 +15,10 @@ const Quiz = ({ quiz }) => {
 
       <p className="text-gray-700 mb-8">{quiz.description}</p>
 
-      <button className="absolute bottom-4 right-4 px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition">
+      <button
+        className="absolute bottom-4 right-4 px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition"
+        onClick={() => navigate(`/participate/${quiz._id}`)}
+      >
         Participate
       </button>
     </div>
