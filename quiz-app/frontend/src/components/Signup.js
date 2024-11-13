@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
 import { signup } from "../services/authServices";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -14,6 +14,7 @@ const Signup = () => {
     password: "",
   });
   const [message, setMessage] = useState("");
+  const [error, setError] = useState({});
 
   const navigateHandler = () => {
     navigate("/login");
@@ -32,8 +33,19 @@ const Signup = () => {
       !formData.email ||
       !formData.password
     ) {
-      setMessage("Please fill in all fields");
-      return;
+      return setError({
+        firstName: !formData.firstName
+          ? 'Please enter your first name (e.g., "John")'
+          : "",
+        lastName: !formData.lastName
+          ? 'Please enter your last name (e.g., "Doe")'
+          : "",
+        username: !formData.username ? "Please enter a username" : "",
+        email: !formData.email
+          ? "Please enter a valid email (e.g., example@gmail.com)"
+          : "",
+        password: !formData.password ? "Please enter a password" : "",
+      });
     }
 
     try {
@@ -54,71 +66,105 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h2 className="text-2xl font-semibold mb-6">Signup</h2>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-1/2"
-      >
-        <input
-          type="text"
-          name="firstName"
-          placeholder="First Name"
-          onChange={handleChange}
-          value={formData.firstName}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
-        />
-        <input
-          type="text"
-          name="lastName"
-          placeholder="Last Name"
-          onChange={handleChange}
-          value={formData.lastName}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
-        />
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          onChange={handleChange}
-          value={formData.username}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          value={formData.email}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          value={formData.password}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3"
-        />
-        {message && (
-          <p className="text-center text-red-500 mt-4 text-1xl">{message}</p>
-        )}
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-4 py-2 px-4 rounded"
-        >
+    <div className="font-sans flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg">
+      <div className="bg-white shadow-lg rounded-lg px-10 py-8 w-full max-w-md">
+        <h2 className="text-3xl font-semibold mb-8 text-blue-700 text-center">
           Signup
-        </button>
-      </form>
-      <p className="mt-4 text-center text-sm text-gray-600">
-        Already have an account?{" "}
-        <button
-          onClick={navigateHandler}
-          className="text-blue-600 hover:text-blue-800"
-        >
-          Log in
-        </button>
-      </p>
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <input
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              onChange={handleChange}
+              value={formData.firstName}
+              className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {error.firstName && (
+              <p className="text-red-500 text-sm mt-2">{error.firstName}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              onChange={handleChange}
+              value={formData.lastName}
+              className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {error.lastName && (
+              <p className="text-red-500 text-sm mt-2">{error.lastName}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              onChange={handleChange}
+              value={formData.username}
+              className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {error.username && (
+              <p className="text-red-500 text-sm mt-2">{error.username}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              onChange={handleChange}
+              value={formData.email}
+              className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {error.email && (
+              <p className="text-red-500 text-sm mt-2">{error.email}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              onChange={handleChange}
+              value={formData.password}
+              className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            {error.password && (
+              <p className="text-red-500 text-sm mt-2">{error.password}</p>
+            )}
+          </div>
+
+          {message && (
+            <p className="text-center text-red-500 mt-4 text-sm">{message}</p>
+          )}
+
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded w-full transition duration-200"
+          >
+            Signup
+          </button>
+        </form>
+
+        <p className="mt-6 text-sm text-center text-gray-600">
+          Already have an account?{" "}
+          <button
+            onClick={navigateHandler}
+            className="text-blue-600 hover:text-blue-800 font-semibold"
+          >
+            Log in
+          </button>
+        </p>
+      </div>
     </div>
   );
 };

@@ -1,65 +1,58 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import Logout from "./Logout";
-
 import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
   const { isLoggedIn } = useContext(AuthContext);
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
   return (
-    <nav className=" bg-blue-600 text-white shadow-md">
+    <nav className="bg-blue-600 text-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex-shrink-0">
-            <Link to="/" className="text-2xl font-bold">
-              QuizApp
-            </Link>
-          </div>
+          <Link to="/" className="text-2xl font-bold text-white">
+            QuizApp
+          </Link>
 
           {/* Links for larger screens */}
           <div className="hidden md:flex space-x-4">
             <Link
               to="/"
-              className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+              className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
             >
               Home
             </Link>
             <Link
               to={isLoggedIn ? "/create-quiz" : "/login"}
-              className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+              className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
             >
               Create Quiz
             </Link>
             <Link
               to={isLoggedIn ? "/profile" : "/login"}
-              className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+              className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
             >
               Profile
             </Link>
-            {!isLoggedIn && (
+            {!isLoggedIn ? (
               <>
                 <Link
                   to="/login"
-                  className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+                  className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
                 >
                   Login
                 </Link>
                 <Link
                   to="/sign-up"
-                  className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+                  className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
                 >
                   Sign up
                 </Link>
               </>
-            )}
-
-            {isLoggedIn && (
-              <>
-                <Logout className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium" />
-              </>
+            ) : (
+              <Logout className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-200" />
             )}
           </div>
 
@@ -67,7 +60,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="text-white focus:outline-none focus:ring-2 focus:ring-white"
+              className="focus:outline-none focus:ring-2 focus:ring-white"
             >
               <svg
                 className="h-6 w-6"
@@ -90,46 +83,42 @@ const Navbar = () => {
 
         {/* Dropdown Menu for smaller screens */}
         {isMenuOpen && (
-          <div className="md:hidden space-y-1 mt-2">
+          <div className="md:hidden space-y-1 mt-2 bg-blue-700 rounded-lg p-4 shadow-lg">
             <Link
               to="/"
-              className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+              className="block text-white hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
             >
               Home
             </Link>
             <Link
-              to={isLoggedIn ? "/create-quiz" : "/sign-up"}
-              className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+              to={isLoggedIn ? "/create-quiz" : "/login"}
+              className="block text-white hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
             >
               Create Quiz
             </Link>
             <Link
-              to={isLoggedIn ? "/profile" : "/sign-up"}
-              className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+              to={isLoggedIn ? "/profile" : "/login"}
+              className="block text-white hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
             >
               Profile
             </Link>
-            {!isLoggedIn && (
-              <div>
+            {!isLoggedIn ? (
+              <>
                 <Link
                   to="/login"
-                  className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+                  className="block text-white hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
                 >
                   Login
                 </Link>
                 <Link
                   to="/sign-up"
-                  className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+                  className="block text-white hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
                 >
                   Sign up
                 </Link>
-              </div>
-            )}
-
-            {isLoggedIn && (
-              <>
-                <Logout className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium" />
               </>
+            ) : (
+              <Logout className="block text-white hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200" />
             )}
           </div>
         )}

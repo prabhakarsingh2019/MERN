@@ -1,8 +1,7 @@
-import React from "react";
-import { Link, BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
-import Navbar from "./components/Navbar";
 import QuizForm from "./components/QuizForm";
 import { AuthContextProvider } from "./context/AuthContext";
 import Home from "./components/Home";
@@ -14,60 +13,24 @@ const App = () => {
     <AuthContextProvider>
       <BrowserRouter>
         <Navbar />
-        <div className="p-6  text-white">
-          <h1 className="text-black text-4xl font-bold">
-            Welcome to the Quiz App
-          </h1>
-        </div>
+        <div className="min-h-screen bg-gray-100">
+          <div className="max-w-4xl mx-auto mt-8 p-6">
+            <h1 className="text-4xl font-bold text-gray-900 mb-6 text-center">
+              Welcome to the Quiz App
+            </h1>
 
-        <div className="min-h-screen bg-gray-100 p-4">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                  <Home />
-                </div>
-              }
-            />
-            <Route
-              path="/sign-up"
-              element={
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                  <Signup />
-                </div>
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                  <Login />
-                </div>
-              }
-            />
-            <Route
-              path="/create-quiz"
-              element={
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                  <QuizForm />
-                </div>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                  <Profile />
-                </div>
-              }
-            />
-            <Route
-              className="bg-white p-6 rounded-lg shadow-md"
-              path="/participate/:quizId"
-              element={<ParticipatePage />}
-            />
-          </Routes>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/sign-up" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/create-quiz" element={<QuizForm />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route
+                path="/participate/:quizId"
+                element={<ParticipatePage />}
+              />
+            </Routes>
+          </div>
         </div>
       </BrowserRouter>
     </AuthContextProvider>

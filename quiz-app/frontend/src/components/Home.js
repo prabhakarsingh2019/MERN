@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Quiz from "./Quiz";
 
 const Home = () => {
@@ -23,6 +23,7 @@ const Home = () => {
 
     fetchQuiz();
   }, []);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -35,8 +36,8 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-4xl mx-auto mt-8 p-4">
+    <div className="min-h-screen py-8">
+      <div className="max-w-4xl mx-auto p-6 ">
         <h3 className="text-3xl font-bold mb-6 text-gray-800 text-center">
           Participate in Quiz
         </h3>
