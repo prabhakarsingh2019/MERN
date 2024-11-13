@@ -9,9 +9,11 @@ export const signup = async (userData) => {
     });
 
     const data = await response.json();
+    localStorage.setItem("authToken", data.token);
     if (!response.ok || !data.success) {
       throw new Error(data.message || "signup failed");
     }
+
     return data;
   } catch (error) {
     throw error;

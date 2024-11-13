@@ -2,13 +2,14 @@ import { useState } from "react";
 import { createQuiz } from "../services/quizService";
 
 const QuizForm = () => {
+  const [error, setError] = useState(false);
   const [quiz, setQuiz] = useState({
     title: "",
     description: "",
     questions: [
       {
         questionText: "",
-        options: [{ text: "", isCorrect: false }],
+        options: [{ option: "", isCorrect: false }],
       },
     ],
     points: 0,
@@ -18,10 +19,31 @@ const QuizForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (
+      !quiz.title &&
+      !quiz.description &&
+      !quiz.questions.question &&
+      !quiz.questions.options.option
+    ) {
+      setError(true);
+      return setMessage("Please fill in all fields.");
+    }
     try {
       const response = await createQuiz(quiz);
+      setQuiz({
+        title: "",
+        description: "",
+        questions: [
+          {
+            questionText: "",
+            options: [{ option: "", isCorrect: false }],
+          },
+        ],
+        points: 0,
+      });
       setMessage(response.message);
     } catch (error) {
+      setError(true);
       setMessage(error.message);
     }
   };
@@ -34,7 +56,7 @@ const QuizForm = () => {
 
   const handleOptionChange = (qIndex, oIndex, value) => {
     const updatedQuestions = [...quiz.questions];
-    updatedQuestions[qIndex].options[oIndex].text = value;
+    updatedQuestions[qIndex].options[oIndex].option = value;
     setQuiz({ ...quiz, questions: updatedQuestions });
   };
 
@@ -45,7 +67,7 @@ const QuizForm = () => {
 
   const addOption = (qIndex) => {
     const updatedQuestions = [...quiz.questions];
-    updatedQuestions[qIndex].options.push({ text: "", isCorrect: false });
+    updatedQuestions[qIndex].options.push({ option: "", isCorrect: false });
     setQuiz({ ...quiz, questions: updatedQuestions });
   };
 
@@ -160,8 +182,8 @@ const QuizForm = () => {
                 <input
                   type="text"
                   placeholder="Enter option"
-                  name="optionText"
-                  value={option.text}
+                  name="option"
+                  value={option.option}
                   onChange={(e) =>
                     handleOptionChange(qIndex, oIndex, e.target.value)
                   }
@@ -215,7 +237,15 @@ const QuizForm = () => {
       </form>
 
       {/* Success/Failure Message */}
-      {message && <p className="text-center text-red-500 mt-4">{message}</p>}
+      {message && (
+        <p
+          className={`${
+            error ? "text-red-500" : "text-green-500"
+          }text-center text-xl-1  mt-4`}
+        >
+          {message}
+        </p>
+      )}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { participationUpdate } from "../services/quizService";
 
 const ParticipatePage = () => {
   const { isLoggedIn } = useContext(AuthContext);
@@ -17,7 +18,8 @@ const ParticipatePage = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [message, setMessage] = useState("");
-  let score = 0;
+  const [loading, setLoading] = useState(true);
+  const [score, setScore] = useState("");
 
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -27,6 +29,8 @@ const ParticipatePage = () => {
         setQuiz(data);
       } catch (error) {
         console.error("Error fetching quiz:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchQuiz();
@@ -51,11 +55,18 @@ const ParticipatePage = () => {
     return selectedAnswer ? "bg-blue-500 text-white" : "bg-gray-200";
   };
 
-  //   const correctOption = (questionIndex, optionIndex, isCorrect) => {
-  //     const selectedAnswer = selectedAnswers[questionIndex] === optionIndex;
-  //   };
+  const calculateScore = (selectedAnswers) => {
+    const calculateScore = quiz.questions.reduce((acc, question, index) => {
+      const correctOption = question.options.findIndex(
+        (option) => option.isCorrect
+      );
+      const isCorrect = selectedAnswers[index] === correctOption;
+      return acc + (isCorrect ? quiz.points : 0);
+    }, 0);
+    setScore(calculateScore);
+  };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let answerIsSelected = true;
     for (let i = 0; i < quiz.questions.length; i++) {
       if (selectedAnswers[i] === undefined) {
@@ -63,15 +74,27 @@ const ParticipatePage = () => {
         break;
       }
     }
-
     if (!answerIsSelected) {
-      setMessage("Answer all the questions before submitting the quiz");
-      return;
+      setLoading(false);
+      return setMessage("Answer all the questions before submitting the quiz");
+    }
+    const definedScore = quiz.points;
+    if (definedScore !== 0) {
+      calculateScore(selectedAnswers);
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
+    const reqdata = {
+      quizId,
+      score,
+      selectedAnswers,
+    };
+
     setIsSubmitted(true);
+    await participationUpdate(reqdata);
+    setLoading(false);
   };
-  if (!quiz) {
+
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="flex flex-col items-center">
@@ -81,8 +104,10 @@ const ParticipatePage = () => {
       </div>
     );
   }
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
+      {message && <p className="text-4xl  mb-4 text-black-700">{message}</p>}
       {isSubmitted && (
         <div>
           <div>
@@ -90,13 +115,11 @@ const ParticipatePage = () => {
               Quiz Result
             </h1>
           </div>
-          {quiz.points !== 0 ? (
+          {quiz.points !== 0 && (
             <div>
               <p className="text-2xl  mb-4 text-gray-700">Your Score:</p>
               <p className="text-2xl font-bold mb-4 text-gray-700">{score}</p>
             </div>
-          ) : (
-            ""
           )}
         </div>
       )}
@@ -138,11 +161,16 @@ const ParticipatePage = () => {
 
       <button
         className=" px-8 py-4 mx-2 my-4 rounded-lg shadow-md bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition"
-        onClick={handleSubmit}
+        disabled={isSubmitted}
+        onClick={() => {
+          setLoading(true);
+          setTimeout(() => {
+            handleSubmit();
+          }, 500);
+        }}
       >
         Submit
       </button>
-      {message && <p>{message}</p>}
     </div>
   );
 };

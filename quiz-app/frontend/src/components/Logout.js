@@ -10,6 +10,7 @@ const Logout = () => {
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
     navigate("/");
+    window.location.reload();
   };
   return (
     <div>

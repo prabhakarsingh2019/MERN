@@ -1,5 +1,6 @@
 import { json } from "express";
 import Quiz from "../models/quizModel.js";
+import Participation from "../models/participationModel.js";
 
 export const createQuiz = async (req, res) => {
   const { title, description, questions } = req.body;
@@ -44,5 +45,79 @@ export const getQuizById = async (req, res) => {
     res.status(200).json(quiz);
   } catch (error) {
     res.status(500).json({ message: JSON.stringify(error) });
+  }
+};
+
+export const createParticipationData = async (req, res) => {
+  const quizId = req.params.quizId;
+  const { score, selectedAnswers } = req.body;
+  const userId = req.user.id;
+  const { firstName, lastName, username } = req.user;
+  const name = `${firstName} ${lastName}`;
+  try {
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+    const existingParticipation = await Participation.findOne({
+      creator: quizId,
+    });
+    if (existingParticipation) {
+      const newParticipant = {
+        userId,
+        username,
+        name,
+        score,
+        selectedAnswers,
+      };
+      existingParticipation.participants.push(newParticipant);
+      await existingParticipation.save();
+      return res.status(200).json({
+        message: "Your participation has been recorded successfully",
+        success: true,
+        participation: existingParticipation,
+      });
+    }
+    const newParticipant = {
+      userId,
+      username,
+      name,
+      score,
+      selectedAnswers,
+    };
+    const newParticipation = new Participation({
+      creator: quizId,
+      participants: [newParticipant],
+    });
+    await newParticipation.save();
+    res.status(201).json({
+      message: "Your participation has been recorded successfully",
+      success: true,
+      participation: newParticipation,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: JSON.stringify(error),
+      error: error.message,
+    });
+  }
+};
+
+export const getParticipationData = async (req, res) => {
+  try {
+    const quizId = req.params.quizId;
+    const participation = await Participation.findOne({ creator: quizId });
+    if (!participation) {
+      return res.status(400).json({
+        message: "Participation data not found",
+        success: false,
+      });
+    }
+    res.status(200).json(participation);
+  } catch (error) {
+    res.status(400).json({
+      message: "server error",
+      success: false,
+    });
   }
 };

@@ -10,7 +10,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
-    <nav className="bg-blue-600 text-white shadow-md">
+    <nav className=" bg-blue-600 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
@@ -98,13 +98,13 @@ const Navbar = () => {
               Home
             </Link>
             <Link
-              to="/quiz"
+              to={isLoggedIn ? "/create-quiz" : "/sign-up"}
               className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
             >
               Create Quiz
             </Link>
             <Link
-              to="/profile"
+              to={isLoggedIn ? "/profile" : "/sign-up"}
               className="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
             >
               Profile
