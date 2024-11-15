@@ -85,7 +85,7 @@ const Signup = () => {
       });
       setMessage(response.message);
       setIsLoggedIn(true);
-      navigate("/");
+      navigate("/verify-email");
     } catch (error) {
       setMessage(error.message);
     }

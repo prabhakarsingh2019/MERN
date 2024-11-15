@@ -1,8 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import authRoutes from "./routes/userRoutes.js";
+import authRoutes from "./routes/userAuthRoutes.js";
 import quizzRoutes from "./routes/quizRoutes.js";
+import userRoutes from "./routes/userRoute.js";
 import cookieParser from "cookie-parser";
 dotenv.config();
 
@@ -25,6 +26,7 @@ mongoose
 //Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/quiz", quizzRoutes);
+app.use("/api/user", userRoutes);
 app.listen(process.env.PORT, () => {
   console.log("Server is running on port " + process.env.PORT);
 });

@@ -1,9 +1,13 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Quiz = ({ quiz }) => {
+  const { setToggleMenu } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleParticipation = () => {
+    setToggleMenu(false);
     navigate(`/participate/${quiz._id}`);
   };
 

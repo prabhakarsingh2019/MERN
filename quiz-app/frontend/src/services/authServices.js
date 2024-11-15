@@ -41,3 +41,42 @@ export const login = async (userdata) => {
     throw error;
   }
 };
+
+export const verifyYourToken = async (code) => {
+  try {
+    const response = await fetch("/api/auth/verify-email", {
+      method: "POST",
+      body: JSON.stringify({ code: code }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Verification failed");
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const generateOtp = async () => {
+  try {
+    const response = await fetch("/api/auth/generate-token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/auth",
+      },
+      credentials: "include",
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Failed to generate OTP");
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

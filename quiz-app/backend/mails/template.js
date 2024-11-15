@@ -20,7 +20,7 @@ export const resetTemplate = `<!DOCTYPE html>
   </body>
 </html>`;
 
-export const verifyEmail = `<!DOCTYPE html>
+export const verifyEmailTemplate = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">

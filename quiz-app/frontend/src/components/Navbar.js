@@ -16,7 +16,6 @@ const Navbar = () => {
             QuizApp
           </Link>
 
-          {/* Links for larger screens */}
           <div className="hidden md:flex space-x-4">
             <Link
               to="/"
@@ -30,12 +29,14 @@ const Navbar = () => {
             >
               Create Quiz
             </Link>
-            <Link
-              to={isLoggedIn ? "/profile" : "/login"}
-              className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
-            >
-              Profile
-            </Link>
+            {isLoggedIn && (
+              <Link
+                to="/profile"
+                className="hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
+              >
+                Profile
+              </Link>
+            )}
             {!isLoggedIn ? (
               <>
                 <Link
@@ -81,7 +82,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Dropdown Menu for smaller screens */}
         {isMenuOpen && (
           <div className="md:hidden space-y-1 mt-2 bg-blue-700 rounded-lg p-4 shadow-lg">
             <Link
@@ -96,12 +96,14 @@ const Navbar = () => {
             >
               Create Quiz
             </Link>
-            <Link
-              to={isLoggedIn ? "/profile" : "/login"}
-              className="block text-white hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
-            >
-              Profile
-            </Link>
+            {isLoggedIn && (
+              <Link
+                to="/profile"
+                className="block text-white hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition duration-200"
+              >
+                Profile
+              </Link>
+            )}
             {!isLoggedIn ? (
               <>
                 <Link

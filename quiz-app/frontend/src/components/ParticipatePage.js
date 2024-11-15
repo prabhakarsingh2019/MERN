@@ -58,17 +58,6 @@ const ParticipatePage = () => {
     return selectedAnswer ? "bg-blue-500 text-white" : "bg-gray-200";
   };
 
-  const calculateScore = (selectedAnswers) => {
-    const calculateScore = quiz.questions.reduce((acc, question, index) => {
-      const correctOption = question.options.findIndex(
-        (option) => option.isCorrect
-      );
-      const isCorrect = selectedAnswers[index] === correctOption;
-      return acc + (isCorrect ? quiz.points : 0);
-    }, 0);
-    setScore(calculateScore);
-  };
-
   const handleSubmit = async () => {
     let answerIsSelected = true;
     for (let i = 0; i < quiz.questions.length; i++) {
@@ -82,19 +71,32 @@ const ParticipatePage = () => {
       return setMessage("Answer all the questions before submitting the quiz");
     }
     const definedScore = quiz.points;
+    let calculateScore = 0;
     if (definedScore !== 0) {
-      calculateScore(selectedAnswers);
+      calculateScore = quiz.questions.reduce((acc, question, index) => {
+        const correctOption = question.options.findIndex(
+          (option) => option.isCorrect
+        );
+        const isCorrect = selectedAnswers[index] === correctOption;
+        return acc + (isCorrect ? quiz.points : 0);
+      }, 0);
+      setScore(calculateScore);
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
     const reqdata = {
       quizId,
-      score,
+      score: calculateScore,
       selectedAnswers,
     };
 
     setIsSubmitted(true);
-    await participationUpdate(reqdata);
-    setLoading(false);
+    try {
+      await participationUpdate(reqdata);
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
