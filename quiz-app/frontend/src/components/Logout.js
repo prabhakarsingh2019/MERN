@@ -1,26 +1,46 @@
 import { useContext } from "react";
-
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
-  const { setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn, appLoader, setAppLoader } = useContext(AuthContext);
   const navigate = useNavigate();
-  const logout = () => {
-    localStorage.removeItem("authToken");
-    setIsLoggedIn(false);
-    navigate("/");
-    window.location.reload();
+
+  const logout = async () => {
+    setAppLoader(true);
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsLoggedIn(false);
+        navigate("/");
+      } else {
+        console.error("Logout failed", data.message);
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    } finally {
+      setTimeout(() => {
+        setAppLoader(false);
+      }, 200);
+    }
   };
+
   return (
     <div>
       <button
         onClick={logout}
-        className="  text-red-600 font-semibold rounded-md hover:text-red-700 mt-1"
+        className="text-red-600 font-semibold rounded-md hover:text-red-700 mt-1"
       >
         Logout
       </button>
     </div>
   );
 };
+
 export default Logout;

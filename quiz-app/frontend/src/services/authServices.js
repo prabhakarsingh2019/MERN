@@ -6,12 +6,12 @@ export const signup = async (userData) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     const data = await response.json();
-    localStorage.setItem("authToken", data.token);
     if (!response.ok || !data.success) {
-      throw new Error(data.message || "signup failed");
+      throw new Error(data.message || "Signup failed");
     }
 
     return data;
@@ -28,13 +28,14 @@ export const login = async (userdata) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     const data = await response.json();
     if (!response.ok || !data.success) {
       throw new Error(data.message || "Login failed");
     }
-    localStorage.setItem("authToken", data.jwttoken);
+
     return data;
   } catch (error) {
     throw error;

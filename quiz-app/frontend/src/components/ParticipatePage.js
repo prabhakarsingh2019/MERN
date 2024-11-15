@@ -24,7 +24,10 @@ const ParticipatePage = () => {
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        const response = await fetch(`/api/quiz/${quizId}`);
+        const response = await fetch(`/api/quiz/${quizId}`, {
+          credentials: "include",
+        });
+
         const data = await response.json();
         setQuiz(data);
       } catch (error) {

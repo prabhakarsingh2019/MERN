@@ -1,16 +1,42 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
 const AuthContextProvider = ({ children }) => {
-  const [activeOption, setActiveOption] = useState("quizzes");
+  const [appLoader, setAppLoader] = useState(true);
 
-  const token = localStorage.getItem("authToken");
-  const [isLoggedIn, setIsLoggedIn] = useState(token ? true : false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    document.cookie.includes("token")
+  );
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch("/api/auth/user", {
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        setIsLoggedIn(false);
+      } finally {
+        setAppLoader(false);
+      }
+    };
 
+    checkAuthStatus();
+  }, []);
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, setIsLoggedIn, activeOption, setActiveOption }}
+      value={{
+        isLoggedIn,
+        setIsLoggedIn,
+        appLoader,
+        setAppLoader,
+      }}
     >
       {children}
     </AuthContext.Provider>

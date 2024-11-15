@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { signup } from "../services/authServices";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -15,9 +16,21 @@ const Signup = () => {
   });
   const [message, setMessage] = useState("");
   const [error, setError] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigateHandler = () => {
     navigate("/login");
+  };
+
+  const validPassword = (password) => {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+    return regex.test(password);
+  };
+
+  const validEmail = (email) => {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(email);
   };
 
   const handleChange = (e) => {
@@ -47,6 +60,19 @@ const Signup = () => {
         password: !formData.password ? "Please enter a password" : "",
       });
     }
+    const checkEmail = validEmail(formData.email);
+    const checkPassword = validPassword(formData.password);
+
+    if (!checkEmail || !checkPassword) {
+      return setError({
+        email: !checkEmail
+          ? "Please enter a valid email (e.g., example@gmail.com)"
+          : "",
+        password: !checkPassword
+          ? "Password must be at least 8 characters long, contain a number, a special character, and both uppercase and lowercase letters."
+          : "",
+      });
+    }
 
     try {
       const response = await signup(formData);
@@ -72,7 +98,7 @@ const Signup = () => {
           Signup
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} noValidate className="space-y-6">
           <div>
             <input
               type="text"
@@ -130,14 +156,29 @@ const Signup = () => {
           </div>
 
           <div>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              onChange={handleChange}
-              value={formData.password}
-              className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                onChange={handleChange}
+                value={formData.password}
+                className={`shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                  error.password ? "ring-red-400 ring-2" : ""
+                }`}
+              />
+              <button
+                type="button"
+                className="absolute right-4 top-1/2 transform -translate-y-1/2"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <FaEyeSlash className="text-gray-600" />
+                ) : (
+                  <FaEye className="text-gray-600" />
+                )}
+              </button>
+            </div>
             {error.password && (
               <p className="text-red-500 text-sm mt-2">{error.password}</p>
             )}

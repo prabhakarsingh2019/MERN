@@ -3,12 +3,13 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRoutes from "./routes/userRoutes.js";
 import quizzRoutes from "./routes/quizRoutes.js";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+app.use(cookieParser());
 
 //mongoDB connection
 mongoose

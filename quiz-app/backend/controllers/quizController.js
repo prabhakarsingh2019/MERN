@@ -1,4 +1,3 @@
-import { json } from "express";
 import Quiz from "../models/quizModel.js";
 import Participation from "../models/participationModel.js";
 

@@ -8,14 +8,17 @@ const Home = () => {
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        const response = await fetch("/api/quiz/quizes");
+        const response = await fetch("/api/quiz/quizes", {
+          credentials: "include",
+        });
+
         const data = await response.json();
         if (!response.ok) {
           throw new Error(data.message || "Failed to get quiz");
         }
         setQuizes(data);
       } catch (error) {
-        throw error;
+        console.error("Error fetching quizzes:", error);
       } finally {
         setLoading(false);
       }

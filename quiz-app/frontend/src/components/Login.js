@@ -46,9 +46,7 @@ const Login = () => {
     if (!checkEmail || !checkPassword) {
       return setError({
         email: !checkEmail ? "Invalid email" : "",
-        password: !checkPassword
-          ? "Password must be at least 8 characters long, contain a number, a special character, and both uppercase and lowercase letters."
-          : "",
+        password: !checkPassword ? "Inavlid password" : "",
       });
     }
 
