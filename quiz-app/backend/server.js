@@ -9,7 +9,7 @@ import cors from "cors";
 dotenv.config();
 
 const corsOptions = {
-  origin: "https://your-frontend-url.com",
+  origin: "https://quiz-app-frontend-lqmi.onrender.com",
   methods: "GET,POST,PUT,DELETE",
   credentials: true,
 };
