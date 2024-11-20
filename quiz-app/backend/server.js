@@ -5,9 +5,17 @@ import authRoutes from "./routes/userAuthRoutes.js";
 import quizzRoutes from "./routes/quizRoutes.js";
 import userRoutes from "./routes/userRoute.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 dotenv.config();
 
+const corsOptions = {
+  origin: "https://your-frontend-url.com",
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true,
+};
+
 const app = express();
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(cookieParser());

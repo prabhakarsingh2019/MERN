@@ -9,10 +9,13 @@ const Logout = () => {
   const logout = async () => {
     setAppLoader(true);
     try {
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://quiz-app-backend-5k5j.onrender.com/api/auth/logout",
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
 
       const data = await response.json();
 

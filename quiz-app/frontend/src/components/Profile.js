@@ -8,15 +8,17 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("api/user/profile", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          "https://quiz-app-backend-5k5j.onrender.comapi/user/profile",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
         const data = await response.json();
-
         setUser(data.user);
         setQuizzesCreated(data.quizData);
         setParticipations(data.participations);

@@ -8,9 +8,12 @@ const Home = () => {
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        const response = await fetch("/api/quiz/quizes", {
-          credentials: "include",
-        });
+        const response = await fetch(
+          "https://quiz-app-backend-5k5j.onrender.com/api/quiz/quizes",
+          {
+            credentials: "include",
+          }
+        );
 
         const data = await response.json();
         if (!response.ok) {

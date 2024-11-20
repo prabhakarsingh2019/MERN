@@ -1,13 +1,16 @@
 export const signup = async (userData) => {
   try {
-    const response = await fetch("/api/auth/sign-up", {
-      method: "POST",
-      body: JSON.stringify(userData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    const response = await fetch(
+      "https://quiz-app-backend-5k5j.onrender.com/api/auth/sign-up",
+      {
+        method: "POST",
+        body: JSON.stringify(userData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
 
     const data = await response.json();
     if (!response.ok || !data.success) {
@@ -22,14 +25,17 @@ export const signup = async (userData) => {
 
 export const login = async (userdata) => {
   try {
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify(userdata),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    const response = await fetch(
+      "https://quiz-app-backend-5k5j.onrender.com/api/auth/login",
+      {
+        method: "POST",
+        body: JSON.stringify(userdata),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
 
     const data = await response.json();
     if (!response.ok || !data.success) {
@@ -44,14 +50,17 @@ export const login = async (userdata) => {
 
 export const verifyYourToken = async (code) => {
   try {
-    const response = await fetch("/api/auth/verify-email", {
-      method: "POST",
-      body: JSON.stringify({ code: code }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    const response = await fetch(
+      "https://quiz-app-backend-5k5j.onrender.com/api/auth/verify-email",
+      {
+        method: "POST",
+        body: JSON.stringify({ code: code }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
     const data = await response.json();
     if (!response.ok || !data.success) {
       throw new Error(data.message || "Verification failed");
@@ -64,13 +73,16 @@ export const verifyYourToken = async (code) => {
 
 export const generateOtp = async () => {
   try {
-    const response = await fetch("/api/auth/generate-token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/auth",
-      },
-      credentials: "include",
-    });
+    const response = await fetch(
+      "https://quiz-app-backend-5k5j.onrender.com/api/auth/generate-token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/auth",
+        },
+        credentials: "include",
+      }
+    );
     const data = await response.json();
     if (!response.ok || !data.success) {
       throw new Error(data.message || "Failed to generate OTP");

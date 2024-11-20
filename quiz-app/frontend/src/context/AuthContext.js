@@ -11,9 +11,12 @@ const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch("/api/auth/user", {
-          credentials: "include",
-        });
+        const response = await fetch(
+          "https://quiz-app-backend-5k5j.onrender.com/api/auth/user",
+          {
+            credentials: "include",
+          }
+        );
         if (response.ok) {
           const data = await response.json();
           setIsLoggedIn(true);
