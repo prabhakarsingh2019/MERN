@@ -73,7 +73,7 @@ export const createParticipationData = async (req, res) => {
       existingParticipation.participants.push(newParticipant);
       await existingParticipation.save();
       return res.status(200).json({
-        message: "Your participation has been recorded successfully",
+        message: "Your participation has been recorded",
         success: true,
         participation: existingParticipation,
       });
