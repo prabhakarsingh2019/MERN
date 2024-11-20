@@ -107,21 +107,21 @@ export const checkAuthStatus = async (req, res) => {
 
 export const verifyEmail = async (req, res) => {
   const { code } = req.body;
-  const user = req.user;
+  const userId = req.user._id;
 
   try {
-    const userData = await User.findById(user._id);
-    if (!userData) {
+    const user = await User.findById(userId);
+    if (!user) {
       return res
         .status(400)
         .json({ message: "User not found", success: false });
     }
-    const checkCode = userData.verificationToken === code;
+    const checkCode = user.verificationToken === code;
     if (checkCode) {
-      userData.isVerified = true;
-      userData.verificationToken = undefined;
-      userData.verificationExpiresAt = undefined;
-      await userData.save();
+      user.isVerified = true;
+      user.verificationToken = undefined;
+      user.verificationExpiresAt = undefined;
+      await user.save();
       return res.status(200).json({
         success: true,
         message: "Email verified successfully",

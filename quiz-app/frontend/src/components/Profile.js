@@ -16,7 +16,7 @@ const Profile = () => {
           credentials: "include",
         });
         const data = await response.json();
-        console.log(data.user);
+
         setUser(data.user);
         setQuizzesCreated(data.quizData);
         setParticipations(data.participations);

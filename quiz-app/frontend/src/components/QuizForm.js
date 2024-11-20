@@ -2,6 +2,8 @@ import { useState } from "react";
 import { createQuiz } from "../services/quizService";
 
 const QuizForm = () => {
+  const [loading, setLoading] = useState("");
+
   const [error, setError] = useState(false);
   const [quiz, setQuiz] = useState({
     title: "",
@@ -241,7 +243,7 @@ const QuizForm = () => {
         <p
           className={`${
             error ? "text-red-500" : "text-green-500"
-          }text-center text-xl-1  mt-4`}
+          }text-center text-xl-2  mt-4`}
         >
           {message}
         </p>

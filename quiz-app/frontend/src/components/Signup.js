@@ -133,7 +133,7 @@ const Signup = () => {
               name="username"
               placeholder="Username"
               onChange={handleChange}
-              value={formData.username}
+              value={formData.username.toLowerCase()}
               className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             {error.username && (

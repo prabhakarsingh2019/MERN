@@ -2,7 +2,7 @@ import Quiz from "../models/quizModel.js";
 import Participation from "../models/participationModel.js";
 
 export const createQuiz = async (req, res) => {
-  const { title, description, questions } = req.body;
+  const { title, description, questions, points } = req.body;
   const creator = req.user.id;
   const { firstName, lastName, username } = req.user;
   const creatorName = `${firstName} ${lastName}`;
@@ -13,6 +13,7 @@ export const createQuiz = async (req, res) => {
       questions,
       creator,
       creatorName,
+      points,
       creatorUsername: username,
     });
     await quiz.save();
@@ -20,7 +21,7 @@ export const createQuiz = async (req, res) => {
       .status(200)
       .json({ message: "Quiz created successfully", success: true });
   } catch (error) {
-    res.status(400).json({ message: JSON.stringify(error), success: false });
+    res.status(400).json({ message: "Server error", success: false });
   }
 };
 
@@ -29,7 +30,7 @@ export const getAllQuiz = async (req, res) => {
     const quizes = await Quiz.find({});
     res.status(200).json(quizes);
   } catch (error) {
-    res.status(400).json({ message: error, success: false });
+    res.status(400).json({ message: "Server error", success: false });
   }
 };
 
@@ -43,7 +44,7 @@ export const getQuizById = async (req, res) => {
     }
     res.status(200).json(quiz);
   } catch (error) {
-    res.status(500).json({ message: JSON.stringify(error) });
+    res.status(500).json({ message: "Server error", success: false });
   }
 };
 
@@ -96,7 +97,7 @@ export const createParticipationData = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: JSON.stringify(error),
+      message: "Server error",
       error: error.message,
     });
   }
