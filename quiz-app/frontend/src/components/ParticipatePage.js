@@ -24,9 +24,12 @@ const ParticipatePage = () => {
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
-        const response = await fetch(`/api/quiz/${quizId}`, {
-          credentials: "include",
-        });
+        const response = await fetch(
+          `https://quiz-app-backend-5k5j.onrender.com/api/quiz/${quizId}`,
+          {
+            credentials: "include",
+          }
+        );
 
         const data = await response.json();
         setQuiz(data);
