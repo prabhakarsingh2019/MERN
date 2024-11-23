@@ -2,8 +2,10 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import joi from "joi";
+import crypto from "crypto";
 import { transporter } from "../mails/emailtranspoerter.js";
 import {
+  forgot_pass_email_template,
   verify_email_template,
   welcome_email_template,
 } from "../mails/template.js";
@@ -20,14 +22,19 @@ const loginValidationSchema = joi.object({
   password: joi.string().min(6).required(),
 });
 
+const emailValidationSchema = joi.object({
+  email: joi.string().email().required(),
+});
+
 export const signup = async (req, res) => {
   const { fullName, password, email, role } = req.body;
   const { error } = signupValidationSchema.validate(req.body);
 
   if (error) {
-    return res
-      .status(400)
-      .json({ message: `Validation error: ${error.details[0].message}` });
+    return res.status(400).json({
+      message: `Validation error: ${error.details[0].message}`,
+      success: false,
+    });
   }
 
   try {
@@ -36,6 +43,7 @@ export const signup = async (req, res) => {
       return res.status(400).json({
         message:
           "An account already exists with this email. Please try a different email.",
+        success: false,
       });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -82,6 +90,7 @@ export const signup = async (req, res) => {
     res.status(500).json({
       message:
         "Something went wrong while creating the user. Please try again later.",
+      success: false,
     });
   }
 };
@@ -91,9 +100,10 @@ export const login = async (req, res) => {
   const { error } = loginValidationSchema.validate(req.body);
 
   if (error) {
-    return res
-      .status(400)
-      .json({ message: `Validation error: ${error.details[0].message}` });
+    return res.status(400).json({
+      message: `Validation error: ${error.details[0].message}`,
+      success: false,
+    });
   }
 
   try {
@@ -102,12 +112,14 @@ export const login = async (req, res) => {
       return res.status(404).json({
         message:
           "No account associated with this email. Please enter a valid email or register.",
+        success: false,
       });
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res
-        .status(401)
-        .json({ message: "Invalid password. Please try again." });
+      return res.status(401).json({
+        message: "Invalid password. Please try again.",
+        success: false,
+      });
     }
     const token = jwt.sign(
       {
@@ -131,6 +143,7 @@ export const login = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Something went wrong while logging in. Please try again later.",
+      success: false,
     });
   }
 };
@@ -138,43 +151,33 @@ export const login = async (req, res) => {
 export const verifyEmail = async (req, res) => {
   const { code } = req.body;
   const userId = req.user._id;
-  try {
-    const user = await User.findById(userId);
-    if (!user) {
-      return res
-        .status(404)
-        .json({ message: "User not found. Please try again." });
-    }
-    const isMatch = await bcrypt.compare(code, user.verificationToken);
-    if (!isMatch) {
-      return res.status(401).json({
-        message:
-          "Invalid verification code. Please check the code and try again.",
-      });
-    }
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    user.verificationExpiresAt = undefined;
-    await user.save();
-    const mailOptions = {
-      from: process.env.EMAIL_ADDRESS,
-      to: user.email,
-      subject: "Welcome to our platform!",
-      text: "",
-      html: welcome_email_template.replace("{fullName}", user.fullName),
-    };
-    await transporter.sendMail(mailOptions);
+  const result = await verifyOtp(
+    userId,
+    code,
+    "verificationToken",
+    "verificationExpiresAt",
+    "Email verified successfully. Welcome aboard!"
+  );
 
-    return res.status(200).json({
-      success: true,
-      message: "Email verified successfully. Welcome aboard!",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message:
-        "Something went wrong while verifying the email. Please try again later.",
-    });
+  if (!result.success) {
+    return res
+      .status(result.status)
+      .json({ message: result.message, success: result.success });
   }
+
+  const user = await User.findById(userId);
+  const mailOptions = {
+    from: process.env.EMAIL_ADDRESS,
+    to: user.email,
+    subject: "Welcome to our platform!",
+    text: "",
+    html: welcome_email_template.replace("{fullName}", user.fullName),
+  };
+  await transporter.sendMail(mailOptions);
+
+  return res
+    .status(result.status)
+    .json({ success: result.success, message: result.message });
 };
 
 export const generateOtp = async (req, res) => {
@@ -244,6 +247,14 @@ export const checkAuthStatus = async (req, res) => {
 
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
+  const { error } = emailValidationSchema.validate(req.body);
+
+  if (error) {
+    return res.status(400).json({
+      message: `Validation error: ${error.details[0].message}`,
+      success: false,
+    });
+  }
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -252,32 +263,86 @@ export const forgotPassword = async (req, res) => {
         success: false,
       });
     }
-    const otp = Math.floor(100000 + Math.random() * 900000);
-    const hashedOtp = await bcrypt.hash(otp.toString(), 10);
-    const verificationExpiresAt = Date.now() + 60 * 60 * 1000;
-
-    await User.updateOne(
-      { email },
-      {
-        forgotPasswordToken: hashedOtp,
-        forgotPasswordExpiresAt: verificationExpiresAt,
-      }
-    );
-
+    const jwtToken = jwt.sign({ userId: user._id }, process.env.JwtSECRET_KEY, {
+      expiresIn: "5m",
+    });
+    res.cookie("resetJwtToken", jwtToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+      maxAge: 5 * 60 * 1000,
+    });
+    const token = crypto.randomBytes(32).toString("hex");
+    const hashedToken = await bcrypt.hash(token, 10);
+    const tokenExpiresAt = Date.now() + 5 * 60 * 1000;
+    user.forgotPasswordToken = hashedToken;
+    user.forgotPasswordTokenExpiresAt = tokenExpiresAt;
+    await user.save();
+    const resetLink = `${process.env.CLIENT_URL}/reset-password/${token}`;
     const mailOptions = {
       from: process.env.EMAIL_ADDRESS,
       to: user.email,
-      subject: "OTP for Password Reset",
-      text: `Your OTP for password reset is ${otp}`,
-      html: verify_email_template.replace("{verificationCode}", otp),
+      subject: "Reset Your Password",
+      text: `Click the link below to reset your password`,
+      html: forgot_pass_email_template.replace("{resetLink}", resetLink),
     };
 
     await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: "OTP sent to your email.", success: true });
+    res.status(200).json({
+      message: "Password reset link sent to your email.",
+      success: true,
+    });
   } catch (error) {
     res.status(500).json({
       message:
-        "Something went wrong while sending OTP. Please try again later.",
+        "Something went wrong while sending password reset link. Please try again later.",
+      success: false,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  const userId = req.user._id;
+  const { password } = req.body;
+  const { resetToken } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    if (user.forgotPasswordTokenExpiresAt < Date.now()) {
+      return res.status(400).json({
+        message: "Reset token has expired.",
+        success: false,
+      });
+    }
+    const isValid = bcrypt.compare(resetToken, user.forgotPasswordToken);
+    if (!isValid) {
+      return res.status(400).json({
+        message: "Invalid Token",
+        success: false,
+      });
+    }
+    user.password = await bcrypt.hash(password, 10);
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordTokenExpiresAt = undefined;
+    res.clearCookie("token");
+    res.clearCookie("authJwtToken");
+    await user.save();
+    res.status(200).json({
+      message: "Password reset successfully.",
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message:
+        "Something went wrong while resetting password. Please try again later.",
+      success: false,
     });
   }
 };

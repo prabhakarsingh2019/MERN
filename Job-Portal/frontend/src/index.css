@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles */
+html, body {
+  @apply bg-gray-200 text-white font-sans antialiased; /* Dark background and white text */
+}
+
+/* Navbar */
+.navbar {
+  @apply bg-secondary text-white py-5 px-8 shadow-lg rounded-b-lg; /* Smooth bottom rounded navbar */
+}
+
+.navbar h4 {
+  @apply text-2xl font-bold;
+}
+
+.navbar a {
+  @apply text-white hover:text-accent transition-colors duration-300 ease-in-out;
+}
+
+.navbar a:hover {
+  @apply text-primary; /* Hover text becomes purple */
+}
+
+.navbar ul {
+  @apply flex gap-8;
+}
+
+.navbar li {
+  @apply text-lg;
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply bg-primary text-white py-3 px-6 rounded-lg shadow-md hover:bg-accent transition-all duration-400 ease-in-out;
+}
+
+.btn-primary:hover {
+  @apply bg-accent text-black; /* Yellow background with black text on hover */
+}
+
+.btn-secondary {
+  @apply bg-secondary text-white py-3 px-6 rounded-lg shadow-md hover:bg-primary transition-all duration-400 ease-in-out;
+}
+
+.btn-secondary:hover {
+  @apply bg-primary text-white; /* Purple to primary color transition */
+}
+
+/* Input and Form Styles */
+input, select, textarea {
+  @apply bg-gray-100 text-black border-2 border-gray-300 rounded-lg p-3 mb-4 w-full focus:outline-none focus:ring-2 focus:ring-primary;
+}
+
+input:focus, select:focus, textarea:focus {
+  @apply border-primary;
+}

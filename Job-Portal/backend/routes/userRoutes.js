@@ -1,26 +1,44 @@
-import express, { Router } from "express";
+import express from "express";
 import {
   checkAuthStatus,
+  forgotPassword,
   generateOtp,
   login,
   logout,
+  resetPassword,
   signup,
   verifyEmail,
 } from "../controllers/userControllers.js";
 import { authenticateUser } from "../../../quiz-app/backend/middleware/userAuthenticate.js";
+import { resetTokenAuthenticate } from "../middleware/resetPasswordAuthenticate.js";
 
 const router = express.Router();
 
-router.post("/signup", signup);
+// Signup Route
+router.post("/auth/signup", signup);
 
-router.post("/login", login);
+// Login Route
+router.post("/auth/login", login);
 
-router.post("/verify-email", authenticateUser, verifyEmail);
+// Email Verification Route
+router.post("/auth/verify-email", authenticateUser, verifyEmail);
 
-router.post("/generate-token", authenticateUser, generateOtp);
+// Generate OTP Route (For email verification or password reset)
+router.post("/auth/generate-otp", authenticateUser, generateOtp);
 
-router.post("/logout", logout);
+// Logout Route
+router.post("/auth/logout", logout);
 
-router.get("/user", authenticateUser, checkAuthStatus);
+// Check Authentication Status Route
+router.get("/auth/status", authenticateUser, checkAuthStatus);
+
+// Forgot Password Route
+router.post("/auth/forgot-password", forgotPassword);
+
+router.post(
+  "/reset-password/:resetToken",
+  resetTokenAuthenticate,
+  resetPassword
+);
 
 export default router;

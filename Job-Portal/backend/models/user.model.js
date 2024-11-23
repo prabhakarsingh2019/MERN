@@ -50,11 +50,11 @@ const userSchema = new mongoose.Schema(
     verificationToken: String,
     verificationExpiresAt: Date,
     isVerified: { type: Boolean, default: false },
-    forgotPasswordToken: String, // Added for password reset
-    forgotPasswordExpiresAt: Date, // Added for password reset
+    forgotPasswordToken: String,
+    forgotPasswordTokenExpiresAt: Date,
   },
   {
-    timestamps: true, // Automatically handles createdAt and updatedAt
+    timestamps: true,
   }
 );
 
