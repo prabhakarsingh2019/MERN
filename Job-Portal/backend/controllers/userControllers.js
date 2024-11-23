@@ -9,6 +9,7 @@ import {
   verify_email_template,
   welcome_email_template,
 } from "../mails/template.js";
+import { verifyOtp } from "../utils/verifyOtp.js";
 
 const signupValidationSchema = joi.object({
   fullName: joi.string().min(3).required(),
@@ -57,6 +58,8 @@ export const signup = async (req, res) => {
       verificationToken: hashedToken,
       verificationExpiresAt: Date.now() + 60 * 60 * 1000,
     });
+
+    await newUser.save();
     const token = jwt.sign({ userId: newUser._id }, process.env.JwtSECRET_KEY, {
       expiresIn: "1d",
     });
@@ -66,8 +69,6 @@ export const signup = async (req, res) => {
       sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000,
     });
-
-    await newUser.save();
     const mailOptions = {
       from: process.env.EMAIL_ADDRESS,
       to: email,
@@ -189,12 +190,7 @@ export const generateOtp = async (req, res) => {
         .status(404)
         .json({ message: "User not found. Please try again." });
     }
-    const currentTime = Date.now();
-    if (currentTime > user.verificationExpiresAt) {
-      return res.status(400).json({
-        message: "Verification token has expired. Please request a new one.",
-      });
-    }
+
     const otp = Math.floor(100000 + Math.random() * 900000);
     const hashedOtp = await bcrypt.hash(otp.toString(), 10);
     const verificationExpiresAt = Date.now() + 60 * 60 * 1000;

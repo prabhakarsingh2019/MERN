@@ -8,6 +8,7 @@ import Home from "./components/Home";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import ResetLayout from "./layouts/ResetLayout";
+import VerifyEmail from "./components/VerifyEmail";
 
 const App = () => {
   return (
@@ -20,7 +21,7 @@ const App = () => {
         <Route path="/job-listings" element={<Jobs />} />
         <Route path="/profile/:userId" element={<Profile />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route
           path="/reset-password/:resetToken"
           element={

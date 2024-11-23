@@ -76,7 +76,6 @@ const VerifyEmail = () => {
           </button>
         </div>
 
-        {/* Resend Code Section */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500">
             Didn't receive the code?{" "}
@@ -90,7 +89,6 @@ const VerifyEmail = () => {
           </p>
         </div>
 
-        {/* Message Display */}
         {message && (
           <div className="mt-6 text-center">
             <p

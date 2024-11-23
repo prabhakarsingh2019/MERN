@@ -1,4 +1,5 @@
-import User from "../models/user.model";
+import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
 
 export const verifyOtp = async (
   userId,
@@ -32,9 +33,10 @@ export const verifyOtp = async (
 
     return { status: 200, message: successMessage, success: true };
   } catch (error) {
-    res.status(500).json({
-      message: "Something went wrong. Please try again later.",
+    return {
+      status: 500,
+      message: "Internal Server Error",
       success: false,
-    });
+    };
   }
 };

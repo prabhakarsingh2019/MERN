@@ -59,3 +59,42 @@ export const forgetPassword = async (email) => {
     throw error;
   }
 };
+
+export const verifyEmail = async (code) => {
+  try {
+    const response = await fetch(`${apiUrl}/user/auth/verify-email`, {
+      method: "POST",
+      body: JSON.stringify({ code }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Verify email failed");
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const resendVerifyToken = async () => {
+  try {
+    const response = await fetch(`${apiUrl}/user/auth/generate-otp`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Resend verify token failed");
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

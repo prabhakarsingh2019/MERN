@@ -2,9 +2,10 @@ import { useState } from "react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { validateData } from "../utils/validData";
 import { signup } from "../service/userService";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -16,15 +17,10 @@ const Signup = () => {
     email: "",
     password: "",
   });
-
   const [loader, setLoader] = useState(false);
-
   const [message, setMessage] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
-
   const [success, setSuccess] = useState(true);
-
   const handleDataChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError({
@@ -54,6 +50,9 @@ const Signup = () => {
       const response = await signup(formData);
       setMessage(response.message);
       setSuccess(true);
+      setTimeout(() => {
+        navigate("/verify-email");
+      }, 1500);
     } catch (error) {
       setMessage(error.message);
       setSuccess(false);

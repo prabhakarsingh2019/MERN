@@ -6,7 +6,7 @@ export const userAuthenticate = async (req, res, next) => {
   if (!token)
     return res
       .status(401)
-      .json({ message: "Access denied. No token provided" });
+      .json({ message: "Access denied. No token provided", success: false });
   try {
     const decoded = jwt.verify(token, process.env.JwtSECRET_KEY);
     const user = await User.findById(decoded.userId);
@@ -16,6 +16,6 @@ export const userAuthenticate = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal Server" });
   }
 };
