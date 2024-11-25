@@ -1,9 +1,11 @@
-const Home =()=>{
-    return (
-        <div>
-            <h1>Welcome to Home Page</h1>
-        </div>
-    )
-}
+import Jobs from "./Jobs";
 
-export default Home
+const Home = () => {
+  return (
+    <div>
+      <Jobs />
+    </div>
+  );
+};
+
+export default Home;

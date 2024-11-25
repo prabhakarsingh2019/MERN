@@ -10,12 +10,15 @@ import {
   welcome_email_template,
 } from "../mails/template.js";
 import { verifyOtp } from "../utils/verifyOtp.js";
+import cloudinary from "../utils/cloudinary.js";
+import upload from "../middleware/multer.js";
 
 const signupValidationSchema = joi.object({
   fullName: joi.string().min(3).required(),
   email: joi.string().email().required(),
   password: joi.string().min(6).required(),
   role: joi.string().valid("student", "recruiter").default("student"),
+  username: joi.string().required(),
 });
 
 const loginValidationSchema = joi.object({
@@ -28,7 +31,7 @@ const emailValidationSchema = joi.object({
 });
 
 export const signup = async (req, res) => {
-  const { fullName, password, email, role } = req.body;
+  const { fullName, password, email, role, username } = req.body;
   const { error } = signupValidationSchema.validate(req.body);
 
   if (error) {
@@ -55,6 +58,7 @@ export const signup = async (req, res) => {
       password: hashedPassword,
       email,
       role,
+      username,
       verificationToken: hashedToken,
       verificationExpiresAt: Date.now() + 60 * 60 * 1000,
     });
@@ -124,7 +128,7 @@ export const login = async (req, res) => {
     }
     const token = jwt.sign(
       {
-        id: user._id,
+        userId: user._id,
       },
       process.env.JwtSECRET_KEY,
       {
@@ -338,6 +342,121 @@ export const resetPassword = async (req, res) => {
     res.status(500).json({
       message:
         "Something went wrong while resetting password. Please try again later.",
+      success: false,
+    });
+  }
+};
+
+export const findUser = async (req, res) => {
+  try {
+    const users = await User.findOne().select("-password");
+    if (!users) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({
+      message:
+        "Something went wrong while finding user. Please try again later.",
+      success: false,
+    });
+  }
+};
+
+export const findUserById = async (req, res) => {
+  const { id } = req.id;
+  try {
+    const user = await User.findById(id).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({
+      message:
+        "Something went wrong while finding user by id. Please try again later.",
+      success: false,
+    });
+  }
+};
+
+export const findUserByUsername = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findOne({ username: id });
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({
+      message:
+        "Something went wrong while finding user by username. Please try again later.",
+      success: false,
+    });
+  }
+};
+
+export const uploadePicture = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    const picture = await cloudinary.v2.uploader.upload(req.file.path, {
+      folder: `profile_pictures/${user.username}`,
+      use_filename: true,
+      unique_filename: false,
+    });
+
+    if (user.profilePicture && user.profilePicture.includes("cloudinary.com")) {
+      const publicId = user.profilePicture.split("/").slice(7, -1).join("/");
+      await cloudinary.v2.uploader.destroy(publicId);
+    }
+    user.profilePicture = picture.secure_url;
+    await user.save();
+    res.status(201).json({
+      message: "Profile picture updated successfully.",
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message:
+        "Something went wrong while uploading profile picture. Please try again later.",
+      success: false,
+    });
+  }
+};
+
+export const profile = async (req, res) => {
+  const userId = req.user._id;
+  try {
+    const user = await User.findById(userId).select(
+      "-password -__v -createdAt -updatedAt -  -verificationToken -verificationExpiresAt,-resetPasswordToken -forgotPasswordToken -forgotPasswordTokenExpiresAt"
+    );
+    res.status(200).json({
+      user,
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message:
+        "Something went wrong while fetching user profile. Please try again later.",
       success: false,
     });
   }

@@ -23,26 +23,10 @@ const jobSchema = new mongoose.Schema(
       enum: ["full-time", "part-time", "internship", "freelance"],
       required: true,
     },
-    jobFeild: {
+    jobRole: {
       type: String,
-      enum: [
-        "Web Developer",
-        "Python Developer",
-        "Cloud Engineer",
-        "Data Scientist",
-        "Frontend Developer",
-        "Backend Developer",
-        "Fullstack Developer",
-        "DevOps Engineer",
-        "Mobile Developer",
-        "Product Manager",
-        "UI/UX Designer",
-        "Project Manager",
-        "Machine Learning Engineer",
-      ],
       required: true,
     },
-
     requirements: {
       type: [String],
       default: [],
@@ -71,4 +55,6 @@ const jobSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("Job", jobSchema);
+const Job = mongoose.model("Job", jobSchema);
+
+export default Job;

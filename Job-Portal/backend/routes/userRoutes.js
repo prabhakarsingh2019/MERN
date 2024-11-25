@@ -1,17 +1,22 @@
 import express from "express";
 import {
   checkAuthStatus,
+  findUser,
+  findUserById,
+  findUserByUsername,
   forgotPassword,
   generateOtp,
   login,
   logout,
   resetPassword,
   signup,
+  uploadePicture,
   verifyEmail,
 } from "../controllers/userControllers.js";
 
 import { resetTokenAuthenticate } from "../middleware/resetPasswordAuthenticate.js";
 import { userAuthenticate } from "../middleware/userAuthenticate.js";
+import upload from "../middleware/multer.js";
 
 const router = express.Router();
 
@@ -40,6 +45,16 @@ router.post(
   "/reset-password/:resetToken",
   resetTokenAuthenticate,
   resetPassword
+);
+
+router.get("/users", findUser);
+router.get("/id", findUserById);
+router.get("/:username", findUserByUsername);
+router.put(
+  "/update/upload-profile",
+  userAuthenticate,
+  upload.single("profilePicture"),
+  uploadePicture
 );
 
 export default router;

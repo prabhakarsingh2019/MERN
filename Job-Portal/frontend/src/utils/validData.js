@@ -17,6 +17,11 @@ export const validateData = (name, value) => {
         error = "Full name is required e.g. Jhon Doe";
       }
       break;
+    case "username":
+      if (!value.trim()) {
+        error = "Username is required e.g. johndoe";
+      }
+      break;
     case "email":
       if (!value.trim()) {
         error =
