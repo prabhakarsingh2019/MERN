@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { resendVerifyToken, verifyEmail } from "../service/userService";
+import { useNavigate } from "react-router-dom";
 
 const VerifyEmail = () => {
   const [loader, setLoader] = useState(false);
   const [code, setCode] = useState("");
   const [success, setSuccess] = useState(true);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const resendHandler = async () => {
     setLoader(true);
@@ -32,6 +34,9 @@ const VerifyEmail = () => {
       await verifyEmail(code);
       setSuccess(true);
       setMessage("Email verified successfully");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (error) {
       setSuccess(false);
       setMessage(error.message);

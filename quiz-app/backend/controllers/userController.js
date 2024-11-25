@@ -1,5 +1,4 @@
 import User from "../models/User.js";
-
 import Quiz from "../models/quizModel.js";
 import Participation from "../models/participationModel.js";
 

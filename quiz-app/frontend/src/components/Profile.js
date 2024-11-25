@@ -9,7 +9,7 @@ const Profile = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://quiz-app-backend-5k5j.onrender.comapi/user/profile",
+          "https://quiz-app-backend-5k5j.onrender.com/api/user/profile",
           {
             method: "GET",
             headers: {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { validateData } from "../utils/validData";
 import { login } from "../service/userService";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [loader, setLoader] = useState(false);
@@ -24,6 +24,7 @@ const Login = () => {
     });
   };
   const [success, setSuccess] = useState(true);
+  const navigate = useNavigate("/");
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -38,6 +39,7 @@ const Login = () => {
       const response = await login(formData);
       setMessage(response.message);
       setSuccess(true);
+      navigate("/");
     } catch (error) {
       setMessage(error.message);
       setSuccess(false);

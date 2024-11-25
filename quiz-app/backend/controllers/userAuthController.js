@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-
 import { verifyEmailTemplate } from "../mails/template.js";
 import { transporter } from "../mails/nodemailerTransporter.js";
 
