@@ -1,10 +1,23 @@
 module.exports = {
-  content: [
-    "./src/**/*.{html,js,jsx,ts,tsx}", // Add paths to all your template files
-  ],
+  content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      // Custom Colors (Primary, Secondary, etc.)
+      keyframes: {
+        growAndSlideDown: {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(-20px) scale(0.8)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0) scale(1)",
+          },
+        },
+      },
+      animation: {
+        growAndSlideDown: "growAndSlideDown 0.5s ease-out",
+      },
+
       colors: {
         primary: "#9b59b6", // Light purple (Primary Color)
         secondary: "#6a1b9a", // Dark purple (Secondary Color)

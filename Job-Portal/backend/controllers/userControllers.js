@@ -222,7 +222,11 @@ export const generateOtp = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+  });
   res.status(200).json({ message: "Logged out successfully." });
 };
 
@@ -231,12 +235,16 @@ export const checkAuthStatus = async (req, res) => {
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({
+      return res.status(400).json({
         message: "User not found. Please log in again.",
         success: false,
       });
     }
-    res.status(200).json({ message: "User is authenticated.", success: true });
+    res.status(200).json({
+      message: "User is authenticated.",
+      success: true,
+      role: user.role,
+    });
   } catch (error) {
     res.status(500).json({
       message:
@@ -349,7 +357,7 @@ export const resetPassword = async (req, res) => {
 
 export const findUser = async (req, res) => {
   try {
-    const users = await User.findOne().select("-password");
+    const users = await User.findOne();
     if (!users) {
       return res.status(404).json({
         message: "User not found.",
@@ -369,7 +377,7 @@ export const findUser = async (req, res) => {
 export const findUserById = async (req, res) => {
   const { id } = req.id;
   try {
-    const user = await User.findById(id).select("-password");
+    const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({
         message: "User not found.",
@@ -422,6 +430,9 @@ export const uploadePicture = async (req, res) => {
       folder: `profile_pictures/${user.username}`,
       use_filename: true,
       unique_filename: false,
+      transformation: [
+        { width: 400, height: 400, crop: "fill", gravity: "face" },
+      ],
     });
 
     if (user.profilePicture && user.profilePicture.includes("cloudinary.com")) {
@@ -430,11 +441,13 @@ export const uploadePicture = async (req, res) => {
     }
     user.profilePicture = picture.secure_url;
     await user.save();
-    res.status(201).json({
+    res.status(200).json({
       message: "Profile picture updated successfully.",
       success: true,
+      picture: user.profilePicture,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       message:
         "Something went wrong while uploading profile picture. Please try again later.",
@@ -446,9 +459,8 @@ export const uploadePicture = async (req, res) => {
 export const profile = async (req, res) => {
   const userId = req.user._id;
   try {
-    const user = await User.findById(userId).select(
-      "-password -__v -createdAt -updatedAt -  -verificationToken -verificationExpiresAt,-resetPasswordToken -forgotPasswordToken -forgotPasswordTokenExpiresAt"
-    );
+    const user = await User.findById(userId);
+
     res.status(200).json({
       user,
       success: true,
@@ -459,5 +471,77 @@ export const profile = async (req, res) => {
         "Something went wrong while fetching user profile. Please try again later.",
       success: false,
     });
+  }
+};
+
+export const deletePicture = async (req, res) => {
+  const userId = req.user._id;
+  try {
+    const user = await User.findById(userId);
+    if (user.profilePicture) {
+      const publicId = user.profilePicture.split("/").slice(7, -1).join("/");
+      await cloudinary.v2.uploader.destroy(publicId);
+    }
+    user.profilePicture = "";
+    await user.save();
+    res.status(200).json({
+      message: "Profile picture deleted successfully.",
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message:
+        "Something went wrong while deleting profile picture. Please try again later.",
+      success: false,
+    });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  const userId = req.user._id;
+  const {
+    fullName,
+    username,
+    email,
+    role,
+    resume,
+    socialLinks,
+    contactNumber,
+    address,
+    bio,
+    skills,
+  } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (email && email !== user.email) {
+      const emailExists = await User.findOne({ email });
+      if (emailExists) {
+        return res.status(400).json({
+          message: "Email is already associated with another account",
+        });
+      }
+    }
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.fullName = fullName || user.fullName;
+    user.username = username || user.username;
+    user.email = email || user.email;
+    user.role = role || user.role;
+    user.resume = resume || user.resume;
+    user.socialLinks = socialLinks || user.socialLinks;
+    user.contactNumber = contactNumber || user.contactNumber;
+    user.address = address || user.address;
+    user.bio = bio || user.bio;
+    user.skills = skills || user.skills;
+    await user.save();
+    return res
+      .status(200)
+      .json({ message: "Profile updated successfully", succes: true });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };

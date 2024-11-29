@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AppContext } from "../context/AppContext";
+import { UserStatusContext } from "../context/UserStatus";
+import Logout from "./Logout";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { Components, setComponent } = useContext(AppContext);
+  const { userStatus } = useContext(UserStatusContext);
 
   return (
     <div>
@@ -22,7 +28,7 @@ const Navbar = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="text-white text-2xl md:hidden focus:outline-none"
           >
-            {isMenuOpen ? "✕" : "☰"}
+            {isMenuOpen ? <FaTimes /> : <FaBars />}
           </button>
 
           {/* Navbar Links (Hidden on small screens, shown on medium+) */}
@@ -54,20 +60,26 @@ const Navbar = () => {
           </ul>
 
           {/* Buttons (Hidden on small screens, shown on medium+) */}
-          <div className="hidden md:flex space-x-4">
-            <Link
-              to="/login"
-              className="btn-primary text-primary hover:bg-white hover:text-primary px-6 py-2 rounded-lg transition-all duration-300"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="btn-secondary text-secondary hover:bg-white hover:text-secondary px-6 py-2 rounded-lg transition-all duration-300"
-            >
-              Signup
-            </Link>
-          </div>
+          {!userStatus ? (
+            <div className="hidden md:flex space-x-4">
+              <button
+                className="btn-primary text-primary hover:bg-white hover:text-primary px-6 py-2 rounded-lg transition-all duration-300"
+                onClick={() => setComponent(Components.LOGIN)}
+              >
+                Login
+              </button>
+              <button
+                className="btn-secondary text-secondary hover:bg-white hover:text-secondary px-6 py-2 rounded-lg transition-all duration-300"
+                onClick={() => setComponent(Components.SIGNUP)}
+              >
+                Signup
+              </button>
+            </div>
+          ) : (
+            <div className="hidden md:flex space-x-4">
+              <Logout />
+            </div>
+          )}
         </div>
 
         {/* Dropdown Menu for Small Screens */}
@@ -98,22 +110,28 @@ const Navbar = () => {
                   Profile
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/login"
-                  className=" w-[100px] btn-primary block text-primary hover:bg-white hover:text-primary px-4 py-2 rounded-lg transition-all duration-300 mt-2"
-                >
-                  Login
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/signup"
-                  className="w-[100px] btn-secondary block  text-secondary hover:bg-white hover:text-secondary px-4 py-2 rounded-lg transition-all duration-300 mt-2"
-                >
-                  Signup
-                </Link>
-              </li>
+              {!userStatus ? (
+                <>
+                  <li>
+                    <button
+                      className=" w-[100px] btn-primary block text-primary hover:bg-white hover:text-primary px-4 py-2 rounded-lg transition-all duration-300 mt-2"
+                      onClick={() => setComponent(Components.LOGIN)}
+                    >
+                      Login
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="w-[100px] btn-secondary block  text-secondary hover:bg-white hover:text-secondary px-4 py-2 rounded-lg transition-all duration-300 mt-2"
+                      onClick={() => setComponent(Components.SIGNUP)}
+                    >
+                      Signup
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <Logout />
+              )}
             </ul>
           </div>
         )}

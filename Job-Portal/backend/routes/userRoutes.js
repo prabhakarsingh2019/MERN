@@ -1,6 +1,7 @@
 import express from "express";
 import {
   checkAuthStatus,
+  deletePicture,
   findUser,
   findUserById,
   findUserByUsername,
@@ -8,8 +9,10 @@ import {
   generateOtp,
   login,
   logout,
+  profile,
   resetPassword,
   signup,
+  updateProfile,
   uploadePicture,
   verifyEmail,
 } from "../controllers/userControllers.js";
@@ -46,10 +49,12 @@ router.post(
   resetTokenAuthenticate,
   resetPassword
 );
-
+router.get("/profile", userAuthenticate, profile);
+router.put("/update", userAuthenticate, updateProfile);
 router.get("/users", findUser);
 router.get("/id", findUserById);
 router.get("/:username", findUserByUsername);
+router.delete("/update/remove-profile", userAuthenticate, deletePicture);
 router.put(
   "/update/upload-profile",
   userAuthenticate,

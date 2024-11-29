@@ -1,11 +1,21 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { validateData } from "../utils/validData";
 import { login } from "../service/userService";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import { UserStatusContext } from "../context/UserStatus";
+import Alert from "../utils/Alert";
 
 const Login = () => {
+  const { Components, setComponent } = useContext(AppContext);
+  const { setUserStatus } = useContext(UserStatusContext);
   const [loader, setLoader] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alert, setAlert] = useState({
+    message: "",
+    type: "",
+  });
   const [error, setError] = useState({
     email: "",
     password: "",
@@ -14,7 +24,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [message, setMessage] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
   const handleBlur = (e) => {
     const newError = validateData(e.target.name, e.target.value);
@@ -23,7 +33,7 @@ const Login = () => {
       [e.target.name]: newError,
     });
   };
-  const [success, setSuccess] = useState(true);
+
   const navigate = useNavigate("/");
 
   const handleLogin = async (e) => {
@@ -31,18 +41,27 @@ const Login = () => {
     setLoader(true);
     const hasError = Object.values(error).some((err) => err !== "");
     if (hasError || Object.values(formData).some((data) => data === "")) {
-      setMessage("Please fill all the fields");
       setLoader(false);
-      return setSuccess(false);
+      setShowAlert(true);
+      return setAlert({
+        message: "Please fill all the fields before login",
+        type: "error",
+      });
     }
     try {
       const response = await login(formData);
-      setMessage(response.message);
-      setSuccess(true);
+      setAlert({
+        message: response.message,
+        type: "success",
+      });
+      setUserStatus(true);
+      setComponent(Components.DEFAULT);
       navigate("/");
     } catch (error) {
-      setMessage(error.message);
-      setSuccess(false);
+      setAlert({
+        message: error.message,
+        type: "error",
+      });
     } finally {
       setLoader(false);
     }
@@ -56,34 +75,41 @@ const Login = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="max-w-sm sm:max-w-md mx-auto px-4 py-6 bg-white rounded-lg shadow-md mt-10">
-        <div className="mb-4 text-center">
-          <h1 className="text-2xl font-semibold text-primary">Login</h1>
+    <div className="max-w-md w-full m-10 m-auto sm:max-w-sm px-4 py-6 bg-white rounded-lg shadow-md ">
+      {showAlert && (
+        <Alert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setShowAlert(false)}
+        />
+      )}
+      <div className="mb-4 text-center">
+        <h1 className="text-2xl font-semibold text-primary">Login</h1>
+      </div>
+
+      <form onSubmit={handleLogin} noValidate>
+        <div className="mb-3">
+          <label className="block text-primary text-sm font-medium mb-1">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            placeholder="e.g. johndoe@example.com"
+            onChange={handleDataChange}
+            onBlur={handleBlur}
+            className={`w-full p-2 border rounded-md focus:ring focus:ring-primary focus:outline-none transition ${
+              error.email ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {error.email && (
+            <p className="text-red-500 text-xs mt-1">{error.email}</p>
+          )}
         </div>
 
-        <form onSubmit={handleLogin} noValidate>
-          <div className="mb-3">
-            <label className="block text-primary text-sm font-medium mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              placeholder="e.g. johndoe@example.com"
-              onChange={handleDataChange}
-              onBlur={handleBlur}
-              className={`w-full p-2 border rounded-md focus:ring focus:ring-primary focus:outline-none transition ${
-                error.email ? "border-red-500" : "border-gray-300"
-              }`}
-            />
-            {error.email && (
-              <p className="text-red-500 text-xs mt-1">{error.email}</p>
-            )}
-          </div>
-
-          <div className="mb-3 relative">
+        <div className="mb-3 ">
+          <div className="relative">
             <label className="block text-primary text-sm font-medium mb-1">
               Password
             </label>
@@ -105,57 +131,59 @@ const Login = () => {
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
-            {error.password && (
-              <p className="text-red-500 text-xs mt-1">{error.password}</p>
-            )}
           </div>
-
-          <div className="mb-3 text-right">
-            <Link
-              to="/forgot-password"
-              className="text-sm text-primary hover:underline"
-            >
-              Forgot Password?
-            </Link>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className={`w-full py-2 bg-primary text-white rounded-md shadow-sm hover:bg-secondary transition-all duration-300 ${
-                loader ? "cursor-not-allowed" : "cursor-pointer"
-              } flex justify-center items-center`}
-              disabled={loader}
-            >
-              {loader ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                "Login"
-              )}
-            </button>
-          </div>
-        </form>
-
-        {message && (
-          <p
-            className={`text-center text-xs mt-2 ${
-              !success ? "text-red-500" : "text-green-500"
-            }`}
-          >
-            {message}
-          </p>
-        )}
-        <div className="text-center mt-3">
-          <p className="text-sm text-primary">
-            Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="font-semibold text-secondary hover:underline"
-            >
-              Sign up
-            </Link>
-          </p>
+          {error.password && (
+            <p className="text-red-500 text-xs mt-1">{error.password}</p>
+          )}
         </div>
+
+        <div className="mb-3 text-right">
+          <button
+            type="button"
+            className="text-sm text-primary hover:underline"
+            onClick={() => setComponent(Components.FORGET_PASSWORD)}
+          >
+            Forgot Password?
+          </button>
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            className={`w-full py-2 bg-primary text-white rounded-md shadow-sm hover:bg-secondary transition-all duration-300 ${
+              loader ? "cursor-not-allowed" : "cursor-pointer"
+            } flex justify-center items-center`}
+            disabled={loader}
+          >
+            {loader ? (
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              "Login"
+            )}
+          </button>
+        </div>
+      </form>
+
+      {alert.message && (
+        <p
+          className={`text-center text-xs mt-2 ${
+            alert.type !== "success" ? "text-red-500" : "text-green-500"
+          }`}
+        >
+          {alert.message}
+        </p>
+      )}
+      <div className="text-center mt-3">
+        <p className="text-sm text-primary">
+          Don't have an account?{" "}
+          <button
+            type="button"
+            className="font-semibold text-secondary hover:underline"
+            onClick={() => setComponent(Components.SIGNUP)}
+          >
+            Sign up
+          </button>
+        </p>
       </div>
     </div>
   );

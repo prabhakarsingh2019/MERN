@@ -43,3 +43,53 @@ export const validateData = (name, value) => {
   }
   return error;
 };
+
+export const validateEditField = (name, value) => {
+  let error = "";
+
+  switch (name) {
+    case "fullName":
+      error = value.trim() ? "" : "Full Name is required.";
+      break;
+
+    case "username":
+      if (!value.trim()) {
+        error = "Username is required.";
+      } else if (value.length < 3) {
+        error = "Username must be at least 3 characters.";
+      }
+      break;
+
+    case "email":
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      error = value.trim()
+        ? emailRegex.test(value)
+          ? ""
+          : "Invalid email format."
+        : "Email is required.";
+      break;
+
+    case "linkedin":
+    case "github":
+      error =
+        value.trim() && !value.startsWith("http") ? "Must be a valid URL." : "";
+      break;
+
+    case "contactNumber":
+      const phoneRegex = /^[0-9]{10}$/;
+      error =
+        value.trim() && !phoneRegex.test(value)
+          ? "Contact Number must be a valid 10-digit number."
+          : "";
+      break;
+
+    case "bio":
+      error = value.length > 500 ? "Bio cannot exceed 500 characters." : "";
+      break;
+
+    default:
+      break;
+  }
+
+  return error;
+};

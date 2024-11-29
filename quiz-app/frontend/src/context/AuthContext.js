@@ -17,12 +17,9 @@ const AuthContextProvider = ({ children }) => {
             credentials: "include",
           }
         );
-        if (response.ok) {
-          const data = await response.json();
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
+
+        const data = await response.json();
+        setIsLoggedIn(true);
       } catch (error) {
         setIsLoggedIn(false);
       } finally {

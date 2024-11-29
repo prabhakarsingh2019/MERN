@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
     },
 
     email: {
@@ -33,18 +34,18 @@ const userSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      default: null,
+      default: "",
     },
     socialLinks: {
-      linkedin: { type: String, default: null },
-      github: { type: String, default: null },
+      linkedin: { type: String, default: "" },
+      github: { type: String, default: "" },
     },
-    contactNumber: { type: String, default: null },
-    address: { type: String, default: null },
+    contactNumber: { type: String, default: "" },
+    address: { type: String, default: "" },
     bio: {
       type: String,
       maxlength: 300,
-      default: null,
+      default: "",
     },
     skills: { type: [String], default: [] },
     appliedJobs: [
@@ -63,6 +64,21 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.set("toJSON", {
+  virtuals: true,
+  transform: (doc, ret) => {
+    delete ret.password;
+    delete ret.__v;
+    delete ret.verificationToken;
+    delete ret.forgotPasswordToken;
+    delete ret.createdAt;
+    delete ret.updatedAt;
+    delete ret.verificationExpiresAt;
+    delete ret.forgotPasswordTokenExpiresAt;
+    return ret;
+  },
+});
 
 const User = mongoose.model("User", userSchema);
 export default User;

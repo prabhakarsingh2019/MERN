@@ -41,8 +41,13 @@ const JobCreate = () => {
         if (!value) error = "Location is required.";
         break;
       case "salaryRange":
-        if (!value && !/^\d+-\d+$/.test(value)) {
-          error = "Salary range must be in format '50000-70000'.";
+        if (
+          !value &&
+          !/^[\p{Sc}]\d+(?:,\d{3})*(?:\s*[-]\s*[\p{Sc}]\d+(?:,\d{3})*)?$/u.test(
+            value
+          )
+        ) {
+          error = "Salary range must be in format '$50000-$70000'.";
         }
         break;
 
@@ -90,7 +95,7 @@ const JobCreate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+
     const hasError = Object.values(formData).some((err) => err !== "");
     if (hasError || Object.values(formData).some((data) => data === "")) {
       setMessage("Please fill all the fields");

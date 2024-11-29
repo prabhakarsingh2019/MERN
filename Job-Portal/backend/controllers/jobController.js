@@ -6,13 +6,17 @@ const jobDataSchema = joi.object({
   title: joi.string().required(),
   description: joi.string().required(),
   location: joi.string().required(),
-  salary: joi.string().required(),
-  jobType: joi.string().required(),
-  requirements: joi.string().required(),
-  user: joi.object().required(),
-  companyName: joi.object().required(),
-  jobRole: joi.object().required(),
+  salaryRange: joi.string().required(),
+  jobType: joi
+    .string()
+    .valid("full-time", "part-time", "internship", "freelance")
+    .required(),
+  requirements: joi.array().items(joi.string()).required(),
+  companyName: joi.string().required(),
+  jobRole: joi.string().required(),
+  status: joi.string().valid("open", "close"),
 });
+
 export const createJob = async (req, res) => {
   const userId = req.user._id;
   const {
