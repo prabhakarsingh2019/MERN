@@ -425,9 +425,10 @@ export const uploadePicture = async (req, res) => {
         success: false,
       });
     }
-    console.log(req.file);
+
     const picture = await cloudinary.v2.uploader.upload(req.file.path, {
       folder: `profile_pictures/${user.username}`,
+      public_id: user.username,
       use_filename: true,
       unique_filename: false,
       transformation: [
@@ -436,7 +437,10 @@ export const uploadePicture = async (req, res) => {
     });
 
     if (user.profilePicture && user.profilePicture.includes("cloudinary.com")) {
-      const publicId = user.profilePicture.split("/").slice(7, -1).join("/");
+      const publicId = user.profilePicture
+        .split("/")
+        .slice(-1)[0]
+        .split(".")[0];
       await cloudinary.v2.uploader.destroy(publicId);
     }
     user.profilePicture = picture.secure_url;
