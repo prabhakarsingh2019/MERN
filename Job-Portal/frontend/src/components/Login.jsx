@@ -55,9 +55,11 @@ const Login = () => {
         type: "success",
       });
       setUserStatus(true);
+      setShowAlert(true)
       setComponent(Components.DEFAULT);
       navigate("/");
     } catch (error) {
+      setShowAlert(true)
       setAlert({
         message: error.message,
         type: "error",

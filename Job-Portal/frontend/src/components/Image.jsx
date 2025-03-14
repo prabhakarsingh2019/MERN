@@ -17,7 +17,7 @@ const initialState = {
     remove: false,
     loading: false,
   },
-  alert: { message: "", type: "", visible: false },
+  alert: { message: "", type: "" },
 };
 
 const reducer = (state, action) => {
@@ -43,9 +43,10 @@ const Image = ({ setImage, profilePicture }) => {
 
   const handleChangeImage = (e) => {
     const file = e.target.files[0];
+    console.log(file);
     if (file) {
       const newImageURL = URL.createObjectURL(file);
-      dispatch({ type: "SET_IMAGE", payload: newImageURL });
+      dispatch({ type: "SET_IMAGE", payload: file });
       dispatch({ type: "SET_STATUS", payload: { complete: true } });
     }
   };
@@ -126,7 +127,7 @@ const Image = ({ setImage, profilePicture }) => {
   };
 
   return (
-    <div className="h-screen w-full  flex items-center justify-center">
+    <div className="h-screen w-full flex items-center justify-center">
       <button
         className="absolute top-4 right-4 text-white bg-gray-700 p-2 rounded-full shadow-lg z-10 hover:bg-gray-900 transition"
         onClick={() => setImage(false)}

@@ -83,7 +83,10 @@ const Signup = () => {
   };
 
   return (
-    <div className="max-w-sm m-10 w-full m-auto sm:max-w-md px-4 py-6 bg-white rounded-lg shadow-md">
+    <div
+      className="max-w-md w-full m-10 
+     m-auto sm:max-w-sm px-4 py-6 bg-white rounded-lg shadow-md "
+    >
       {showAlert && (
         <Alert
           message={alert.message}

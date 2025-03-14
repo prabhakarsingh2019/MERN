@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-import User from "./User.js";
-
 const optionSchema = new mongoose.Schema({
   option: { type: String },
   isCorrect: { type: Boolean },

@@ -95,7 +95,6 @@ const JobCreate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const hasError = Object.values(formData).some((err) => err !== "");
     if (hasError || Object.values(formData).some((data) => data === "")) {
       setMessage("Please fill all the fields");

@@ -30,27 +30,31 @@ const Alert = ({ message, type, onClose }) => {
 
   return (
     <div
-      className={`fixed top-10 flex flex-wrap item-center p-3 rounded-lg shadow-lg text-white animate-growAndSlideDown ${
-        backgroundColors[type] || "bg-blue-600"
-      }`}
+      className={`fixed top-4 left-0 right-0 flex justify-center items-start p-3`}
     >
-      <p className="text-lg font-semibold ">{message}</p>
-      <div className="relative ml-4  w-8 h-8">
-        <svg className="w-full h-full " viewBox="0 0 36 36">
-          <path
-            d="M18 2.0845
+      <div
+        className={`max-w-md w-auto p-3 flex item-center rounded-lg shadow-lg text-white animate-growAndSlideDown ${
+          backgroundColors[type] || "bg-blue-600"
+        }`}
+      >
+        <p className="text-lg font-semibold">{message}</p>
+        <div className="relative ml-4 w-8 h-8">
+          <svg className="w-full h-full" viewBox="0 0 36 36">
+            <path
+              d="M18 2.0845
                a 15.9155 15.9155 0 0 1 0 31.831
                a 15.9155 15.9155 0 0 1 0 -31.831"
-            fill="none"
-            stroke="white"
-            strokeWidth="2"
-            strokeDasharray={`${progress}, 100`}
-          />
-        </svg>
-        <div className="absolute inset-0 flex   items-center justify-center">
-          <span className="text-sm text-white">
-            {Math.ceil(timeLeft / 1000)}
-          </span>
+              fill="none"
+              stroke="white"
+              strokeWidth="2"
+              strokeDasharray={`${progress}, 100`}
+            />
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-sm text-white">
+              {Math.ceil(timeLeft / 1000)}
+            </span>
+          </div>
         </div>
       </div>
     </div>

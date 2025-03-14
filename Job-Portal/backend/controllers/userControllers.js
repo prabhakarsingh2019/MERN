@@ -425,7 +425,7 @@ export const uploadePicture = async (req, res) => {
         success: false,
       });
     }
-
+    console.log(req.file);
     const picture = await cloudinary.v2.uploader.upload(req.file.path, {
       folder: `profile_pictures/${user.username}`,
       use_filename: true,
